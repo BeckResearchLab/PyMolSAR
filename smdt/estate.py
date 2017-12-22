@@ -138,7 +138,7 @@ def CalculateMaxAtomTypeEState(mol):
         Output: result is a dict form containing 79 max estate values.
     #################################################################
     """
-    AT = AtomTypes.ATEstate.GetAtomLabel(mol)
+    AT = AtomTypes.GetAtomLabel(mol)
     Estate = _CalculateEState(mol)
     res = []
     for i in AT:
@@ -169,7 +169,7 @@ def CalculateMinAtomTypeEState(mol):
         Output: result is a dict form containing 79 min estate values.
     #################################################################
     """
-    AT = AtomTypes.ATEstate.GetAtomLabel(mol)
+    AT = AtomTypes.GetAtomLabel(mol)
     Estate = _CalculateEState(mol)
     res = []
     for i in AT:
