@@ -4,6 +4,8 @@ molecular decriptors.
 """
 
 from rdkit import Chem
+import smdt
+from smdt import AtomProperty
 from AtomProperty import GetRelativeAtomicProperty
 import numpy
 import numpy.linalg
