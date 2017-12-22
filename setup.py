@@ -7,5 +7,5 @@ setup(
    author='Rahul Avadhoot',
    author_email='rahulavd@uw.edu',
    packages=['smdt'],
-   install_requires=['numpy','pandas','rdkit']
+   install_requires=['numpy','pandas','scipy']
 )
