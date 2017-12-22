@@ -19,7 +19,14 @@ Small-Molecule-Design-Toolkit aims to provide a high quality open-source toolkit
 * [numpy](https://store.continuum.io/cshop/anaconda/)
 
 ## Installation
-
+**Using a conda environment**
+```buildoutcfg
+git clone https://github.com/BeckResearchLab/small-molecule-design-toolkit.git
+cd small-molecule-design-toolkit
+bash scripts/install_smdt_conda.sh smdt
+source activate smdt
+python setup.py install                                 
+```
 ## FAQ
 
 ## Getting Started
