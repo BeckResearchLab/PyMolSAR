@@ -21,7 +21,9 @@ install:
   - pip install xlrd
   - pip install coveralls
   - pip install nose-exclude
-  - sudo apt-get install python-rdkit librdkit1 rdkit-data
+  - conda config --set always_yes yes --set changeps1 no
+  - conda create -c https://conda.anaconda.org/rdkit -n my-rdkit-env rdkit
+  - source activate my-rdkit-env
   - python setup.py install
 
 script:
