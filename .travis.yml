@@ -1,0 +1,31 @@
+notifications:
+  email:
+    recipients:
+      - rahulavd@uw.edu
+    on_success: change
+    on_failure: always
+
+language: python
+
+python:
+  - "3.5"
+
+branches:
+  only:
+    - master
+
+sudo: false
+
+install:
+  - pip install -r requirements.txt
+  - pip install xlrd
+  - pip install coveralls
+  - pip install nose-exclude
+  - sudo apt-get install python-rdkit librdkit1 rdkit-data
+  - python setup.py install
+
+script:
+  - nosetests --with-doctest --with-coverage --cover-package=smdt --exclude-dir=test/external --exclude-dir=extern --where=smdt
+
+after_success:
+    - coveralls
