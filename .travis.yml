@@ -17,12 +17,18 @@ branches:
 sudo: false
 
 install:
+  - sudo apt-get update
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda create -c rdkit -n my-rdkit-env rdkit
   - pip install -r requirements.txt
   - pip install xlrd
   - pip install coveralls
   - pip install nose-exclude
-  - conda config --set always_yes yes --set changeps1 no
-  - conda create -c https://conda.anaconda.org/rdkit -n my-rdkit-env rdkit
   - source activate my-rdkit-env
   - python setup.py install
 
