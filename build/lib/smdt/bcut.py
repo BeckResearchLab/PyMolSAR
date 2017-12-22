@@ -6,7 +6,6 @@ molecular decriptors.
 from rdkit import Chem
 import smdt
 from smdt import AtomProperty
-from AtomProperty import GetRelativeAtomicProperty
 import numpy
 import numpy.linalg
 import pandas as pd
@@ -33,7 +32,7 @@ def _GetBurdenMatrix(mol, propertylabel='m'):
 
     for i in range(Natom):
         atom = mol.GetAtomWithIdx(i)
-        temp = GetRelativeAtomicProperty(element=atom.GetSymbol(), propertyname=propertylabel)
+        temp = AtomProperty.GetRelativeAtomicProperty(element=atom.GetSymbol(), propertyname=propertylabel)
         AdMatrix1[i, i] = round(temp, 3)
 
     # The element of B connecting atoms i and j, Bij,

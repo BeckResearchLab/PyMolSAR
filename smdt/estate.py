@@ -7,7 +7,7 @@ and Hall's paper.
 from rdkit.Chem.EState import Fingerprinter  as ESFP
 from rdkit import Chem
 import pandas as pd
-import AtomTypes as ATEstate
+from smdt import AtomTypes
 import numpy
 
 def _CalculateEState(mol, skipH=1):
@@ -138,7 +138,7 @@ def CalculateMaxAtomTypeEState(mol):
         Output: result is a dict form containing 79 max estate values.
     #################################################################
     """
-    AT = ATEstate.GetAtomLabel(mol)
+    AT = AtomTypes.ATEstate.GetAtomLabel(mol)
     Estate = _CalculateEState(mol)
     res = []
     for i in AT:
@@ -169,7 +169,7 @@ def CalculateMinAtomTypeEState(mol):
         Output: result is a dict form containing 79 min estate values.
     #################################################################
     """
-    AT = ATEstate.GetAtomLabel(mol)
+    AT = AtomTypes.ATEstate.GetAtomLabel(mol)
     Estate = _CalculateEState(mol)
     res = []
     for i in AT:
