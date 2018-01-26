@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn import model_selection
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesRegressor
 
 def change_nan_infinite(dataframe):
     """
@@ -20,7 +20,7 @@ def tree_based_feature_selection(df_x, df_y, n_features):
     df_x = change_nan_infinite(df_x)
     df_y = change_nan_infinite(df_y)
     column_names = df_x.columns
-    clf = ExtraTreesClassifier()
+    clf = ExtraTreesRegressor()
     clf = clf.fit(df_x, df_y)
     feature_importance = clf.feature_importances_
     scores_table = pd.DataFrame({'feature': column_names, 'scores': feature_importance}).sort_values(by=['scores'],
