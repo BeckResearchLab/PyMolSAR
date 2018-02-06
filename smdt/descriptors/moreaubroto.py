@@ -189,7 +189,10 @@ def GetMoreauBrotoAuto(df_x):
         labels.append('ATSp' + str(i + 1))
     for key in labels:
         r[key] = []
+    i = 0
     for m in df_x['SMILES']:
+        print(i)
+        i = i+1
         mol = Chem.MolFromSmiles(m)
         res = GetMoreauBrotoAutoofMol(mol)
         for key in labels:

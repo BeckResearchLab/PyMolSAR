@@ -220,7 +220,10 @@ def GetMoranAuto(df_x):
     r = {}
     for key in labels:
         r[key] = []
+    i=0
     for m in df_x['SMILES']:
+        print(i)
+        i=i+1
         mol = Chem.MolFromSmiles(m)
         res = GetMoranAutoofMol(mol)
         for key in labels:

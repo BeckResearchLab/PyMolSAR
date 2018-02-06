@@ -70,25 +70,6 @@ def CalculateBalaban(mol):
     """
     return Chem.GraphDescriptors.BalabanJ(mol)
 
-def CalculateGraphDistance(mol):
-    """
-    Calculation of graph distance index
-    ---->Tigdi(log value)
-    Usage: 
-        result=CalculateGraphDistance(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
-    """
-    Distance= Chem.GetDistanceMatrix(mol)
-    n=int(Distance.max())
-    res=0.0
-    for i in range(n):
-       # print Distance==i+1
-        temp=1./2*sum(sum(Distance==i+1))
-        #print temp
-        res = res+temp**2
-    return numpy.log10(res)
-
 
 def CalculateDiameter(mol):
     """
@@ -434,7 +415,6 @@ def CalculateArithmeticTopoIndex(mol):
 _Topology={'W':CalculateWeiner,
            'AW':CalculateMeanWeiner,
            'J':CalculateBalaban,
-           'Tigdi':CalculateGraphDistance,
            'Xu':CalculateXuIndex,
            'GMTI':CalculateGutmanTopo,
            'Pol':CalculatePolarityNumber,
