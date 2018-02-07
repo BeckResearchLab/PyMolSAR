@@ -1,33 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-##############################################################################
-The calculation of some commonly used basak information index  based on its
-topological structure. You can get 21 molecular connectivity descriptors.
-You can freely use and distribute it. If you hava  any problem, you could
-contact with us timely!
-Authors: Zhijiang Yao and Dongsheng Cao.
-Date: 2016.06.04
-Email: gadsby@163.
-##############################################################################
-"""
-
 from rdkit import Chem
-
 import numpy
 import copy
-
-Version = 1.0
-
-
-############################################################################
+import pandas as pd
 
 def _CalculateEntropy(Probability):
     """
-    #################################################################
     **Internal used only**
-
     Calculation of entropy (Information content) for probability given
-    #################################################################
     """
     res = 0.0
     for i in Probability:
@@ -39,11 +18,7 @@ def _CalculateEntropy(Probability):
 
 def CalculateBasakIC0(mol):
     """
-    #################################################################
     Obtain the information content with order 0 proposed by Basak
-
-    ---->IC0
-    #################################################################
     """
 
     BasakIC = 0.0
@@ -60,7 +35,6 @@ def CalculateBasakIC0(mol):
         NTAtomType[i] = IC.count(Unique[i])
 
     if nAtoms != 0:
-        # print sum(NTAtomType/nAtoms)
         BasakIC = _CalculateEntropy(NTAtomType / nAtoms)
     else:
         BasakIC = 0.0
@@ -70,13 +44,8 @@ def CalculateBasakIC0(mol):
 
 def CalculateBasakSIC0(mol):
     """
-    #################################################################
     Obtain the structural information content with order 0
-
     proposed by Basak
-
-    ---->SIC0
-    #################################################################
     """
 
     Hmol = Chem.AddHs(mol)
@@ -92,13 +61,8 @@ def CalculateBasakSIC0(mol):
 
 def CalculateBasakCIC0(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 0
-
     proposed by Basak
-
-    ---->CIC0
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -113,11 +77,8 @@ def CalculateBasakCIC0(mol):
 
 def _CalculateBasakICn(mol, NumPath=1):
     """
-    #################################################################
     **internal used only**
-
     Obtain the information content with order n proposed by Basak
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -137,14 +98,15 @@ def _CalculateBasakICn(mol, NumPath=1):
                     cds = list(index)
                     cds.reverse()
                     temp.append([Hmol.GetAtomWithIdx(kk).GetAtomicNum() for kk in cds[1:]])
-            # print temp
 
             IC[str(i)] = temp
         cds = []
         for value in IC.values():
-            value.sort()
-            cds.append(value)
-        kkk = range(len(cds))
+            for i in range(len(value)):
+                if isinstance(value[i],list):
+                    value[i] = value[i][0]
+            cds.append(sorted(list(value)))
+        kkk = list(range(len(cds)))
         aaa = copy.deepcopy(kkk)
         res = []
         for i in aaa:
@@ -160,7 +122,6 @@ def _CalculateBasakICn(mol, NumPath=1):
                     kkk.remove(ks)
                 res.append(jishu)
 
-                # print res
         BasakIC = _CalculateEntropy(numpy.array(res, numpy.float) / sum(res))
 
     return BasakIC
@@ -168,78 +129,50 @@ def _CalculateBasakICn(mol, NumPath=1):
 
 def CalculateBasakIC1(mol):
     """
-    #################################################################
     Obtain the information content with order 1 proposed by Basak
-
-    ---->IC1
-    #################################################################
     """
     return _CalculateBasakICn(mol, NumPath=2)
 
 
 def CalculateBasakIC2(mol):
     """
-    #################################################################
     Obtain the information content with order 2 proposed by Basak
-
-    ---->IC2
-    #################################################################
     """
     return _CalculateBasakICn(mol, NumPath=3)
 
 
 def CalculateBasakIC3(mol):
     """
-    #################################################################
     Obtain the information content with order 3 proposed by Basak
-
-    ---->IC3
-    #################################################################
     """
     return _CalculateBasakICn(mol, NumPath=4)
 
 
 def CalculateBasakIC4(mol):
     """
-    #################################################################
     Obtain the information content with order 4 proposed by Basak
-
-    ---->IC4
-    #################################################################
     """
     return _CalculateBasakICn(mol, NumPath=5)
 
 
 def CalculateBasakIC5(mol):
     """
-    #################################################################
     Obtain the information content with order 5 proposed by Basak
-
-    ---->IC5
-    #################################################################
     """
     return _CalculateBasakICn(mol, NumPath=6)
 
 
 def CalculateBasakIC6(mol):
     """
-    #################################################################
     Obtain the information content with order 6 proposed by Basak
-
-    ---->IC6
-    #################################################################
     """
     return _CalculateBasakICn(mol, NumPath=7)
 
 
 def CalculateBasakSIC1(mol):
     """
-    #################################################################
     Obtain the structural information content with order 1
-
     proposed by Basak.
-    ---->SIC1
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -254,12 +187,8 @@ def CalculateBasakSIC1(mol):
 
 def CalculateBasakSIC2(mol):
     """
-    #################################################################
     Obtain the structural information content with order 2 proposed
-
     by Basak.
-    ---->SIC2
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -274,12 +203,8 @@ def CalculateBasakSIC2(mol):
 
 def CalculateBasakSIC3(mol):
     """
-    #################################################################
     Obtain the structural information content with order 3 proposed
-
     by Basak.
-    ---->SIC3
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -294,12 +219,8 @@ def CalculateBasakSIC3(mol):
 
 def CalculateBasakSIC4(mol):
     """
-    #################################################################
     Obtain the structural information content with order 4 proposed
-
     by Basak.
-    ---->SIC4
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -314,12 +235,8 @@ def CalculateBasakSIC4(mol):
 
 def CalculateBasakSIC5(mol):
     """
-    #################################################################
     Obtain the structural information content with order 5 proposed
-
     by Basak.
-    ---->SIC5
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -334,12 +251,8 @@ def CalculateBasakSIC5(mol):
 
 def CalculateBasakSIC6(mol):
     """
-    #################################################################
     Obtain the structural information content with order 6 proposed
-
     by Basak.
-    ---->SIC6
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -354,12 +267,8 @@ def CalculateBasakSIC6(mol):
 
 def CalculateBasakCIC1(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 1 proposed
-
     by Basak.
-    ---->CIC1
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -368,18 +277,13 @@ def CalculateBasakCIC1(mol):
         BasakCIC = 0.0
     else:
         BasakCIC = numpy.log2(nAtoms) - IC
-
     return BasakCIC
 
 
 def CalculateBasakCIC2(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 2 proposed
-
     by Basak.
-    ---->CIC2
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -394,12 +298,8 @@ def CalculateBasakCIC2(mol):
 
 def CalculateBasakCIC3(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 3 proposed
-
     by Basak.
-    ---->CIC3
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -414,12 +314,8 @@ def CalculateBasakCIC3(mol):
 
 def CalculateBasakCIC4(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 4 proposed
-
     by Basak.
-    ---->CIC4
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -434,12 +330,8 @@ def CalculateBasakCIC4(mol):
 
 def CalculateBasakCIC5(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 5 proposed
-
     by Basak.
-    ---->CIC5
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -454,12 +346,8 @@ def CalculateBasakCIC5(mol):
 
 def CalculateBasakCIC6(mol):
     """
-    #################################################################
     Obtain the complementary information content with order 6 proposed
-
     by Basak.
-    ---->CIC6
-    #################################################################
     """
     Hmol = Chem.AddHs(mol)
     nAtoms = Hmol.GetNumAtoms()
@@ -496,13 +384,33 @@ _basak = {'CIC0': CalculateBasakCIC0,
           }
 
 
-def GetBasak(mol):
+def GetBasakofMol(mol):
     """
-    #################################################################
     Get the dictionary of basak descriptors for given moelcule mol
-    #################################################################
     """
     result = {}
     for DesLabel in _basak.keys():
         result[DesLabel] = round(_basak[DesLabel](mol), 3)
     return result
+
+
+def getBasak(df_x):
+    """
+    Calculates all Basak descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            basak_descriptors: pandas.DataFrame
+                Basak Descriptors DataFrame
+    """
+    r = {}
+    for key in _basak:
+        r[key] = []
+    for m in df_x['SMILES']:
+        mol = Chem.MolFromSmiles(m)
+        res = GetBasakofMol(mol)
+        for key in _basak:
+            r[key].append(res[key])
+    basak_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(basak_descriptors)

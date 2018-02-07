@@ -1,14 +1,3 @@
-"""
-##############################################################################
-The calculation of Kier and Hall's kappa indices based on its topological
-structure. You can get 7 molecular kappa descriptors. You can
-freely use and distribute it. If you hava  any problem, you could contact
-with us timely!
-Authors: Zhijiang Yao and Dongsheng Cao.
-Date: 2016.06.04
-Email: gadsby@163.com and oriental-cds@163.com
-##############################################################################
-"""
 
 from rdkit import Chem
 from rdkit.Chem import rdchem
@@ -16,21 +5,10 @@ from rdkit.Chem import pyPeriodicTable as PeriodicTable
 periodicTable = rdchem.GetPeriodicTable()
 import pandas as pd
 
+
 def CalculateKappa1(mol):
     """
-    #################################################################
     Calculation of molecular shape index for one bonded fragment
-
-    ---->kappa1
-
-    Usage:
-
-        result=CalculateKappa1(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     P1 = mol.GetNumBonds(onlyHeavy=1)
     A = mol.GetNumAtoms(onlyHeavy=1)
@@ -44,18 +22,7 @@ def CalculateKappa1(mol):
 
 def CalculateKappa2(mol):
     """
-    #################################################################
     Calculation of molecular shape index for two bonded fragment
-
-    ---->kappa2
-    Usage:
-
-        result=CalculateKappa2(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     P2 = len(Chem.FindAllPathsOfLengthN(mol, 2))
     A = mol.GetNumAtoms(onlyHeavy=1)
@@ -70,19 +37,7 @@ def CalculateKappa2(mol):
 
 def CalculateKappa3(mol):
     """
-    #################################################################
     Calculation of molecular shape index for three bonded fragment
-
-    ---->kappa3
-
-    Usage:
-
-        result=CalculateKappa3(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     P3 = len(Chem.FindAllPathsOfLengthN(mol, 3))
     A = mol.GetNumAtoms(onlyHeavy=1)
@@ -100,11 +55,8 @@ def CalculateKappa3(mol):
 
 def _HallKierAlpha(mol):
     """
-    #################################################################
     *Internal Use Only*
-
     Calculation of the Hall-Kier alpha value for a molecule
-    #################################################################
     """
     alphaSum = 0.0
     rC = PeriodicTable.nameTable['C'][5]
@@ -130,21 +82,7 @@ def _HallKierAlpha(mol):
 
 def CalculateKappaAlapha1(mol):
     """
-    #################################################################
     Calculation of molecular shape index for one bonded fragment
-
-    with Alapha
-
-    ---->kappam1
-
-    Usage:
-
-        result=CalculateKappaAlapha1(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     P1 = mol.GetNumBonds(onlyHeavy=1)
     A = mol.GetNumAtoms(onlyHeavy=1)
@@ -159,21 +97,7 @@ def CalculateKappaAlapha1(mol):
 
 def CalculateKappaAlapha2(mol):
     """
-    #################################################################
     Calculation of molecular shape index for two bonded fragment
-
-    with Alapha
-
-    ---->kappam2
-
-    Usage:
-
-        result=CalculateKappaAlapha2(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     P2 = len(Chem.FindAllPathsOfLengthN(mol, 2))
     A = mol.GetNumAtoms(onlyHeavy=1)
@@ -188,21 +112,7 @@ def CalculateKappaAlapha2(mol):
 
 def CalculateKappaAlapha3(mol):
     """
-    #################################################################
     Calculation of molecular shape index for three bonded fragment
-
-    with Alapha
-
-    ---->kappam3
-
-    Usage:
-
-        result=CalculateKappaAlapha3(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     P3 = len(Chem.FindAllPathsOfLengthN(mol, 3))
     A = mol.GetNumAtoms(onlyHeavy=1)
@@ -220,19 +130,7 @@ def CalculateKappaAlapha3(mol):
 
 def CalculateFlexibility(mol):
     """
-    #################################################################
     Calculation of Kier molecular flexibility index
-
-    ---->phi
-
-    Usage:
-
-        result=CalculateFlexibility(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a numeric value.
-    #################################################################
     """
     kappa1 = CalculateKappaAlapha1(mol)
     kappa2 = CalculateKappaAlapha2(mol)
@@ -243,17 +141,7 @@ def CalculateFlexibility(mol):
 
 def GetKappaofMol(mol):
     """
-    #################################################################
     Calculation of all kappa values.
-
-    Usage:
-
-        result=GetKappa(mol)
-
-        Input: mol is a molecule object.
-
-        Output: result is a dcit form containing 6 kappa values.
-    #################################################################
     """
     res = {}
     res['kappa1'] = CalculateKappa1(mol)
@@ -265,7 +153,16 @@ def GetKappaofMol(mol):
     res['phi'] = CalculateFlexibility(mol)
     return res
 
-def GetKappa(df_x):
+def getKappa(df_x):
+    """
+    Calculates all Kappa descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            kappa_descriptors: pandas.DataFrame
+                Kappa Descriptors DataFrame
+    """
     r = {}
     labels = ['kappa1','kappa2','kappa3','kappam1','kappam2','kappam3','phi']
     for key in labels:
@@ -275,4 +172,5 @@ def GetKappa(df_x):
         res = GetKappaofMol(mol)
         for key in labels:
             r[key].append(res[key])
-    return pd.DataFrame(r)
+    kappa_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(kappa_descriptors)

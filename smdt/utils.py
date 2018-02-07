@@ -2,8 +2,10 @@
 
 # Imports
 from sklearn.model_selection import train_test_split
+import smdt
 import numpy as np
 import pandas as pd
+import os
 pd.options.mode.use_inf_as_null = True
 
 
@@ -72,3 +74,4 @@ def descriptor_target_join(descriptors, target):
     descriptors['Target'] = target['Target']
     file = descriptors
     return file
+

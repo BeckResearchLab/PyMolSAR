@@ -1,23 +1,4 @@
-"""
-# CATS2D  Potential Pharmacophore Point (PPP) definitions as describes in
-# Pharmacophores and Pharmacophore Searches 2006 (Eds. T. Langer and R.D. Hoffmann), Chapter 3:
-# Alignment-free Pharmacophore Patterns - A Correlattion-vector Approach.
-# The last lipophilic pattern on page 55 of the book is realized as a graph search and not
-# as a SMARTS search. Therefore, the list contains only two lipophilic SMARTS patterns.
-# The format is tab separated and contains in the first column the PPP type (D = H-bond donor,
-# A = H-bond acceptor, P = positive, N = negative, L = lipophilic). The second column of each entry
-# contains the SMARTS pattern(s). The last entry is a description of the molecular feature
-D	[OH]	Oxygen atom of an OH group
-D	[#7H,#7H2]	Nitrogen atom of an NH or NH2 group
-A	[O]	Oxygen atom
-A	[#7H0]	Nitrogen atom not adjacent to a hydrogen atom
-P	[*+]	atom with a positive charge
-P	[#7H2]	Nitrogen atom of an NH2 group
-N	[*-]	Atom with a negative charge
-N	[C&D2&$(C(=O)O),P&D2&$(P(=O)O),S&D2&$(S(=O)O)] 	Carbon, sulfur or phosphorus atom of a COOH, SOOH or POOH group. This pattern is realized by an graph algorithm
-L	[Cl,Br,I]	Chlorine, bromine, or iodine atom
-L	[S;D2;$(S(C)(C))]	Sulfur atom adjacent to exactly two carbon atoms
-"""
+
 import scipy
 from rdkit import Chem
 import pandas as pd
@@ -30,13 +11,8 @@ PPP = {"D": ['[OH]', '[#7H,#7H2]'],
 
 def MatchAtomType(IndexList, AtomTypeDict):
     """
-    #################################################################
     Mapping two atoms with a certain distance into their atom types
-
-    such as AA,AL, DP,LD etc.
-
-    The result is a list format.
-    #################################################################
+    such as AA,AL, DP,LD etc. The result is a list format.
     """
     First = []
     Second = []
@@ -66,17 +42,11 @@ def MatchAtomType(IndexList, AtomTypeDict):
     return res
 
 
-###################################
 def ContructLFromGraphSearch(mol):
     """
-    #################################################################
     The last lipophilic pattern on page 55 of the book is realized as a graph
-    search and not as a SMARTS search.
-
-    "L" carbon atom adjacent only to carbon atoms.
-
+    search and not as a SMARTS search. "L" carbon atom adjacent only to carbon atoms.
     The result is a list format.
-    #################################################################
     """
 
     AtomIndex = []
@@ -97,20 +67,15 @@ def ContructLFromGraphSearch(mol):
     return AtomIndex
 
 
-###################################
 def FormCATSLabel(PathLength=10):
     """
-    #################################################################
     Construct the CATS label such as AA0, AA1,....AP3,.......
-
     The result is a list format.
-
     A   acceptor;
     P   positive;
     N   negative;
     L   lipophilic;
     D   donor;
-    #################################################################
     """
     AtomPair = ['DD', 'DA', 'DP', 'DN', 'DL', 'AA', 'AP', 'AN', 'AL',
                 'PP', 'PN', 'PL', 'NN', 'NL', 'LL']
@@ -121,15 +86,9 @@ def FormCATSLabel(PathLength=10):
     return CATSLabel
 
 
-###################################
-
 def FormCATSDict(AtomDict, CATSLabel):
     """
-    #################################################################
-    Construt the CATS dict.
-
-    The result is a dict format.
-    #################################################################
+    Construct the CATS dict. The result is a dict format.
     """
 
     temp = []
@@ -150,17 +109,11 @@ def FormCATSDict(AtomDict, CATSLabel):
     return result
 
 
-###################################
-
 def AssignAtomType(mol):
     """
-    #################################################################
     Assign the atoms in the mol object into each of the PPP type
-
     according to PPP list definition.
-
     Note: res is a dict form such as {'A': [2], 'P': [], 'N': [4]}
-    #################################################################
     """
     res = dict()
     for ppptype in PPP:
@@ -178,40 +131,18 @@ def AssignAtomType(mol):
     return res
 
 
-###################################
 def CATS2DforMol(mol, PathLength=10, scale=3):
     """
-    #################################################################
     The main program for calculating the CATS descriptors.
-
-    CATS: chemically advanced template serach
-
-    ----> CATS_DA0 ....
-
-    Usage:
-
-        result=CATS2D(mol,PathLength = 10,scale = 1)
-
-        Input: mol is a molecule object.
-
-               PathLength is the max topological distance between two atoms.
-
-               scale is the normalization method (descriptor scaling method)
-
-               scale = 1 indicates that no normalization. That is to say: the
-
-               values of the vector represent raw counts ("counts").
-
-               scale = 2 indicates that division by the number of non-hydrogen
-
-               atoms (heavy atoms) in the molecule.
-
-               scale = 3 indicates that division of each of 15 possible PPP pairs
-
-               by the added occurrences of the two respective PPPs.
-
-        Output: result is a dict format with the definitions of each descritor.
-    #################################################################
+    CATS: chemically advanced template search
+    PathLength is the max topological distance between two atoms.
+    Scale is the normalization method (descriptor scaling method)
+    Scale = 1 indicates that no normalization. That is to say: the
+    values of the vector represent raw counts ("counts").
+    Scale = 2 indicates that division by the number of non-hydrogen
+    atoms (heavy atoms) in the molecule.
+    Scale = 3 indicates that division of each of 15 possible PPP pairs
+    by the added occurrences of the two respective PPPs.
     """
     Hmol = Chem.RemoveHs(mol)
     AtomNum = Hmol.GetNumAtoms()
@@ -233,7 +164,6 @@ def CATS2DforMol(mol, PathLength=10, scale=3):
     CATSLabel = FormCATSLabel(PathLength)
     CATS1 = FormCATSDict(tempdict, CATSLabel)
 
-    ####set normalization 3
     AtomPair = ['DD', 'DA', 'DP', 'DN', 'DL', 'AA', 'AP',
                 'AN', 'AL', 'PP', 'PN', 'PL', 'NN', 'NL', 'LL']
     temp = []
@@ -243,7 +173,6 @@ def CATS2DforMol(mol, PathLength=10, scale=3):
     AtomPairNum = {}
     for i in AtomPair:
         AtomPairNum.update({i: temp.count(i)})
-    ############################################
     CATS = {}
     if scale == 1:
         CATS = CATS1
@@ -261,7 +190,16 @@ def CATS2DforMol(mol, PathLength=10, scale=3):
 
 _labels = FormCATSLabel()
 
-def CATS2D(df_x):
+def getCATS2D(df_x):
+    """
+    Calculates all CATS 2D descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            cats2d_descriptors: pandas.DataFrame
+                CATS 2D Descriptors DataFrame
+    """
     r = {}
     for key in _labels:
        r[key] = []
@@ -270,4 +208,5 @@ def CATS2D(df_x):
         res = CATS2DforMol(mol)
         for key in _labels:
             r[key].append(res[key])
-    return pd.DataFrame(r)
+    cats2d_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(cats2d_descriptors)

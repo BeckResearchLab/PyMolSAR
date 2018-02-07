@@ -1,7 +1,3 @@
-"""
-The calculation of Burden eigvenvalue descriptors. You can get 64
-molecular decriptors.
-"""
 
 from rdkit import Chem
 import smdt
@@ -12,11 +8,8 @@ import pandas as pd
 
 def _GetBurdenMatrix(mol, propertylabel='m'):
     """
-    #################################################################
     *Internal used only**
-
     Calculate Burden matrix and their eigenvalues.
-    #################################################################
     """
     mol = Chem.AddHs(mol)
     Natom = mol.GetNumAtoms()
@@ -63,11 +56,7 @@ def _GetBurdenMatrix(mol, propertylabel='m'):
 
 def CalculateBurdenMass(mol):
     """
-    #################################################################
     Calculate Burden descriptors based on atomic mass.
-
-    res--->dict type with 16 descriptors
-    #################################################################
     """
     temp = _GetBurdenMatrix(mol, propertylabel='m')
     temp1 = numpy.sort(temp[temp >= 0])
@@ -90,11 +79,7 @@ def CalculateBurdenMass(mol):
 
 def CalculateBurdenVDW(mol):
     """
-    #################################################################
     Calculate Burden descriptors based on atomic vloumes
-
-    res-->dict type with 16 descriptors
-    #################################################################
     """
     temp = _GetBurdenMatrix(mol, propertylabel='V')
     temp1 = numpy.sort(temp[temp >= 0])
@@ -117,11 +102,7 @@ def CalculateBurdenVDW(mol):
 
 def CalculateBurdenElectronegativity(mol):
     """
-    #################################################################
     Calculate Burden descriptors based on atomic electronegativity.
-
-    res-->dict type with 16 descriptors
-    #################################################################
     """
     temp = _GetBurdenMatrix(mol, propertylabel='En')
     temp1 = numpy.sort(temp[temp >= 0])
@@ -144,11 +125,7 @@ def CalculateBurdenElectronegativity(mol):
 
 def CalculateBurdenPolarizability(mol):
     """
-    #################################################################
     Calculate Burden descriptors based on polarizability.
-
-    res-->dict type with 16 descriptors
-    #################################################################
     """
     temp = _GetBurdenMatrix(mol, propertylabel='alapha')
     temp1 = numpy.sort(temp[temp >= 0])
@@ -171,11 +148,7 @@ def CalculateBurdenPolarizability(mol):
 
 def GetBurdenofMol(mol):
     """
-    #################################################################
     Calculate all 64 Burden descriptors
-
-    res-->dict type
-    #################################################################
     """
     bcut = {}
     bcut.update(CalculateBurdenMass(mol))
@@ -192,7 +165,17 @@ _bcut = ["bcutm16", "bcutm15", "bcutm14", "bcutm13", "bcutm12", "bcutm11", "bcut
             "bcutp9", "bcutp8", "bcutp7", "bcutp6", "bcutp5", "bcutp4", "bcutp3",
             "bcutp2", "bcutp1"]
 
-def GetBurden(df_x):
+
+def getBurden(df_x):
+    """
+    Calculates all Burden descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            burden_descriptors: pandas.DataFrame
+                Burden Descriptors DataFrame
+    """
     r = {}
     for key in _bcut:
         r[key] = []
@@ -201,4 +184,5 @@ def GetBurden(df_x):
         res = GetBurdenofMol(mol)
         for key in _bcut:
             r[key].append(res[key])
-    return pd.DataFrame(r)
+    burden_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(burden_descriptors)

@@ -1,59 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-##############################################################################
-The calculation of Moran autocorrelation descriptors. You can get 32 molecular
-decriptors. You can freely use and distribute it. If you hava  any problem,
-you could contact with us timely!
-Authors: Zhijiang Yao and Dongsheng Cao.
-Date: 2016.06.04
-Email: gadsby@163.com and oriental-cds@163.com
-##############################################################################
-"""
 
 from rdkit import Chem
 from smdt.descriptors import AtomProperty
 import pandas as pd
 import numpy
 
-Version = 1.0
-
-
-################################################################
 
 def _CalculateMoranAutocorrelation(mol, lag=1, propertylabel='m'):
     """
-    #################################################################
     **Internal used only**
-
     Calculation of Moran autocorrelation descriptors based on
-
     different property weights.
-
-    Usage:
-
-    res=_CalculateMoranAutocorrelation(mol,lag=1,propertylabel='m')
-
-    Input: mol is a molecule object.
-
-    lag is the topological distance between atom i and atom j.
-
-    propertylabel is the weighted property.
-
-    Output: res is a numeric value.
-    #################################################################
     """
-
     Natom = mol.GetNumAtoms()
-
     prolist = []
     for i in mol.GetAtoms():
         temp = AtomProperty.GetRelativeAtomicProperty(i.GetSymbol(), propertyname=propertylabel)
         prolist.append(temp)
-
     aveweight = sum(prolist) / Natom
-
     tempp = [numpy.square(x - aveweight) for x in prolist]
-
     GetDistanceMatrix = Chem.GetDistanceMatrix(mol)
     res = 0.0
     index = 0
@@ -73,52 +37,24 @@ def _CalculateMoranAutocorrelation(mol, lag=1, propertylabel='m'):
         result = 0
     else:
         result = (res / index) / (sum(tempp) / Natom)
-
     return round(result, 3)
 
 
 def CalculateMoranAutoMass(mol):
     """
-    #################################################################
     Calculation of Moran autocorrelation descriptors based on
-
     carbon-scaled atomic mass.
-
-    Usage:
-
-    res=CalculateMoranAutoMass(mol)
-
-    Input: mol is a molecule object.
-
-    Output: res is a dict form containing eight moran autocorrealtion
-
-    descriptors.
-    #################################################################
     """
     res = {}
-
     for i in range(8):
         res['MATSm' + str(i + 1)] = _CalculateMoranAutocorrelation(mol, lag=i + 1, propertylabel='m')
-
     return res
 
 
 def CalculateMoranAutoVolume(mol):
     """
-    #################################################################
     Calculation of Moran autocorrelation descriptors based on
-
     carbon-scaled atomic van der Waals volume.
-    Usage:
-
-    res=CalculateMoranAutoVolume(mol)
-
-    Input: mol is a molecule object.
-
-    Output: res is a dict form containing eight moran autocorrealtion
-
-    descriptors.
-    #################################################################
     """
     res = {}
 
@@ -130,47 +66,19 @@ def CalculateMoranAutoVolume(mol):
 
 def CalculateMoranAutoElectronegativity(mol):
     """
-    #################################################################
     Calculation of Moran autocorrelation descriptors based on
-
     carbon-scaled atomic Sanderson electronegativity.
-
-    Usage:
-
-    res=CalculateMoranAutoElectronegativity(mol)
-
-    Input: mol is a molecule object.
-
-    Output: res is a dict form containing eight moran autocorrealtion
-
-    descriptors.
-    #################################################################
     """
     res = {}
-
     for i in range(8):
         res['MATSe' + str(i + 1)] = _CalculateMoranAutocorrelation(mol, lag=i + 1, propertylabel='En')
-
     return res
 
 
 def CalculateMoranAutoPolarizability(mol):
     """
-    #################################################################
     Calculation of Moran autocorrelation descriptors based on
-
     carbon-scaled atomic polarizability.
-
-    Usage:
-
-    res=CalculateMoranAutoPolarizability(mol)
-
-    Input: mol is a molecule object.
-
-    Output: res is a dict form containing eight moran autocorrealtion
-
-    descriptors.
-    #################################################################
     """
     res = {}
 
@@ -182,25 +90,9 @@ def CalculateMoranAutoPolarizability(mol):
 
 def GetMoranAutoofMol(mol):
     """
-    #################################################################
     Calcualate all Moran autocorrelation descriptors.
-
     (carbon-scaled atomic mass, carbon-scaled atomic van der Waals volume,
-
-    carbon-scaled atomic Sanderson electronegativity,
-
-    carbon-scaled atomic polarizability)
-
-    Usage:
-
-    res=GetMoranAuto(mol)
-
-    Input: mol is a molecule object.
-
-    Output: res is a dict form containing all moran autocorrealtion
-
-    descriptors.
-    #################################################################
+    carbon-scaled atomic Sanderson electronegativity, carbon-scaled atomic polarizability)
     """
     res = {}
     res.update(CalculateMoranAutoMass(mol))
@@ -210,7 +102,17 @@ def GetMoranAutoofMol(mol):
 
     return res
 
-def GetMoranAuto(df_x):
+def getMoranAuto(df_x):
+    """
+    Calculates all Moran Auto-correlation descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            moran_descriptors: pandas.DataFrame
+                Moran Auto-correlation Descriptors DataFrame
+    """
+
     labels = []
     for i in range(8):
         labels.append('MATSm' + str(i + 1))
@@ -222,10 +124,10 @@ def GetMoranAuto(df_x):
         r[key] = []
     i=0
     for m in df_x['SMILES']:
-        print(i)
         i=i+1
         mol = Chem.MolFromSmiles(m)
         res = GetMoranAutoofMol(mol)
         for key in labels:
             r[key].append(res[key])
-    return pd.DataFrame(r)
+    moran_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(moran_descriptors)

@@ -1,7 +1,3 @@
-"""
-The calculation of Geary autocorrelation indices based on its topological
-structure. You can get 32 molecular autocorrelation descriptors.
-"""
 
 from rdkit import Chem
 from smdt.descriptors import AtomProperty
@@ -13,13 +9,6 @@ def _CalculateGearyAutocorrelation(mol, lag=1, propertylabel='m'):
     **Internal used only**
     Calculation of Geary autocorrelation descriptors based on
     different property weights.
-
-    Usage:
-    res=_CalculateGearyAutocorrelation(mol,lag=1,propertylabel='m')
-    Input: mol is a molecule object.
-    lag is the topological distance between atom i and atom j.
-    property label is the weighted property.
-    Output: res is a numeric value.
     """
 
     Natom = mol.GetNumAtoms()
@@ -60,12 +49,6 @@ def CalculateGearyAutoMass(mol):
     """
     Calculation of Geary autocorrelation descriptors based on
     carbon-scaled atomic mass.
-
-    Usage:
-    res=CalculateMoranAutoMass(mol)
-    Input: mol is a molecule object.
-    Output: res is a dict form containing eight geary autocorrealtion
-    descriptors.
     """
     res = {}
 
@@ -79,12 +62,6 @@ def CalculateGearyAutoVolume(mol):
     """
     Calculation of Geary autocorrelation descriptors based on
     carbon-scaled atomic van der Waals volume.
-
-    Usage:
-    res=CalculateGearyAutoVolume(mol)
-    Input: mol is a molecule object.
-    Output: res is a dict form containing eight geary autocorrealtion
-    descriptors.
     """
     res = {}
 
@@ -98,12 +75,6 @@ def CalculateGearyAutoElectronegativity(mol):
     """
     Calculation of Geary autocorrelation descriptors based on
     carbon-scaled atomic Sanderson electronegativity.
-
-    Usage:
-    res=CalculateGearyAutoElectronegativity(mol)
-    Input: mol is a molecule object.
-    Output: res is a dict form containing eight geary autocorrealtion
-    descriptors.
     """
     res = {}
 
@@ -117,12 +88,6 @@ def CalculateGearyAutoPolarizability(mol):
     """
     Calculation of Geary autocorrelation descriptors based on
     carbon-scaled atomic polarizability.
-
-    Usage:
-    res=CalculateGearyAutoPolarizability(mol)
-    Input: mol is a molecule object.
-    Output: res is a dict form containing eight geary autocorrealtion
-    descriptors.
     """
     res = {}
 
@@ -135,15 +100,6 @@ def CalculateGearyAutoPolarizability(mol):
 def GetGearyAutoofMol(mol):
     """
     Calcualate all Geary autocorrelation descriptors.
-    (carbon-scaled atomic mass, carbon-scaled atomic van der Waals volume,
-    carbon-scaled atomic Sanderson electronegativity,
-    carbon-scaled atomic polarizability)
-
-    Usage:
-    res=GetGearyAuto(mol)
-    Input: mol is a molecule object.
-    Output: res is a dict form containing all geary autocorrealtion
-    descriptors.
     """
     res = {}
     res.update(CalculateGearyAutoMass(mol))
@@ -154,7 +110,17 @@ def GetGearyAutoofMol(mol):
     return res
 
 
-def GetGearyAuto(df_x):
+def getGearyAuto(df_x):
+    """
+    Calculates all Geary Auto-correlation descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            geary_descriptors: pandas.DataFrame
+                Geary Auto-correlation Descriptors DataFrame
+    """
+
     labels = []
     for i in range(8):
         labels.append('GATSm' + str(i + 1))
@@ -169,4 +135,5 @@ def GetGearyAuto(df_x):
         res = GetGearyAutoofMol(mol)
         for key in labels:
             r[key].append(res[key])
-    return pd.DataFrame(r)
+    geary_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(geary_descriptors)

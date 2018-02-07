@@ -1,8 +1,4 @@
-"""
-The calculation of molecular topological indices based on its topological
-structure. You can get 25 molecular topological descriptors
-"""
-
+# Imports
 from rdkit import Chem
 from rdkit.Chem import rdchem
 from rdkit.Chem import GraphDescriptors as GD
@@ -10,27 +6,30 @@ import pandas as pd
 import numpy
 import scipy
 
-
 periodicTable = rdchem.GetPeriodicTable()
 
 
-def _GetPrincipleQuantumNumber(atNum):
+def _GetPrincipalQuantumNumber(atNum):
     """
     *Internal Use Only*
-    Get the principle quantum number of atom with atomic
+    Get the principal quantum number of atom with atomic
     number equal to atNum 
+        Parameters:
+            atNum: int
+        Returns:
+            PrincipalQuantumNumber: int
     """
-    if atNum<=2:
+    if atNum <= 2:
         return 1
-    elif atNum<=10:
+    elif atNum <= 10:
         return 2
-    elif atNum<=18:
+    elif atNum <= 18:
         return 3
-    elif atNum<=36:
+    elif atNum <= 36:
         return 4
-    elif atNum<=54:
+    elif atNum <= 54:
         return 5
-    elif atNum<=86:
+    elif atNum <= 86:
         return 6
     else:
         return 7
@@ -38,31 +37,37 @@ def _GetPrincipleQuantumNumber(atNum):
 
 def CalculateWeiner(mol):
     """
-    Calculation of Weiner number in a molecule
+    Weiner index (W) is the entries of distance matrix D from
+    H-depleted molecular graph.
     Usage: 
-        result=CalculateWeiner(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+        W: Weiner index
     """
-    return 1.0/2*sum(sum(Chem.GetDistanceMatrix(mol)))
+    return 1.0 / 2 * sum(sum(Chem.GetDistanceMatrix(mol)))
 
 
-def CalculateMeanWeiner(mol):    
+def CalculateMeanWeiner(mol):
     """
-    Calculation of Mean Weiner number in a molecule
-    Usage: 
-        result=CalculateWeiner(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Average Weiner index (AW)
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            AW: Average Weiner index
     """
-    N=mol.GetNumAtoms()
-    WeinerNumber=CalculateWeiner(mol)
-    return 2.0*WeinerNumber/(N*(N-1))
+    N = mol.GetNumAtoms()
+    WeinerNumber = CalculateWeiner(mol)
+    return 2.0 * WeinerNumber / (N * (N - 1))
 
 
-def CalculateBalaban(mol):    
+def CalculateBalaban(mol):
     """
-    Calculation of Balaban index in a molecule
+    Calculation of Balaban's J index (J) for a molecule
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            J: Balaban’s J index
     Usage: 
         result=CalculateBalaban(mol)
         Input: mol is a molecule object
@@ -73,103 +78,98 @@ def CalculateBalaban(mol):
 
 def CalculateDiameter(mol):
     """
-    Calculation of diameter, which is 	Largest value
-    in the distance matrix [Petitjean 1992].
-    ---->diametert
-    Usage: 
-        result=CalculateDiameter(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Largest value in the distance matrix.
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            diametert: Largest value in the distance matrix
     """
-    Distance=Chem.GetDistanceMatrix(mol)
+    Distance = Chem.GetDistanceMatrix(mol)
     return Distance.max()
+
 
 def CalculateRadius(mol):
     """
-    Calculation of radius based on topology.
-    It is :If ri is the largest matrix entry in row i of the distance
-    matrix D,then the radius is defined as the smallest of the ri 
-    [Petitjean 1992].
-    ---->radiust
-    Usage: 
-        result=CalculateRadius(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Radius based on topology.
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            radiust: Radius based on topology
     """
-    Distance=Chem.GetDistanceMatrix(mol)
-    temp=[]
+    Distance = Chem.GetDistanceMatrix(mol)
+    temp = []
     for i in Distance:
         temp.append(max(i))
     return min(temp)
-    
+
+
 def CalculatePetitjean(mol):
     """
-    Calculation of Petitjean based on topology.
-    Value of (diameter - radius) / diameter as defined in [Petitjean 1992].
-    ---->petitjeant
-    Usage: 
-        result=CalculatePetitjean(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Petitjean based on topology (petitjeant)
+    Usage:
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            petitjeant: Petitjean based on topology
     """
-    diameter=CalculateDiameter(mol)
-    radius=CalculateRadius(mol)
-    return 1-radius/float(diameter)
-   
+    diameter = CalculateDiameter(mol)
+    radius = CalculateRadius(mol)
+    return 1 - radius / float(diameter)
+
+
 def CalculateXuIndex(mol):
     """
-    Calculation of Xu index
-    ---->Xu
-    Usage: 
-        result=CalculateXuIndex(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Xu index: based on the adjacency matrix and distance matrix
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Xu: Xu Index
     """
-    nAT=mol.GetNumAtoms()
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
-    Distance= Chem.GetDistanceMatrix(mol)
-    sigma=scipy.sum(Distance,axis=1)
-    temp1=0.0
-    temp2=0.0
+    nAT = mol.GetNumAtoms()
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
+    Distance = Chem.GetDistanceMatrix(mol)
+    sigma = scipy.sum(Distance, axis=1)
+    temp1 = 0.0
+    temp2 = 0.0
     for i in range(nAT):
-        temp1=temp1+deltas[i]*((sigma[i])**2)
-        temp2=temp2+deltas[i]*(sigma[i])
-    Xu=numpy.sqrt(nAT)*numpy.log(temp1/temp2)    
+        temp1 = temp1 + deltas[i] * ((sigma[i]) ** 2)
+        temp2 = temp2 + deltas[i] * (sigma[i])
+    Xu = numpy.sqrt(nAT) * numpy.log(temp1 / temp2)
     return Xu
+
 
 def CalculateGutmanTopo(mol):
     """
-    Calculation of Gutman molecular topological index based on
-    simple vertex degree
-    ---->GMTI(log value)
-    Usage: 
-        result=CalculateGutmanTopo(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Gutman molecular topological index (GMTI) based on
+    simple vertex degree.
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            GMTI: Gutman molecular topological index
     """
-    nAT=mol.GetNumAtoms()
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
-    Distance= Chem.GetDistanceMatrix(mol)
-    res=0.0
+    nAT = mol.GetNumAtoms()
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
+    Distance = Chem.GetDistanceMatrix(mol)
+    res = 0.0
     for i in range(nAT):
-        for j in range(i+1,nAT):
-            res=res+deltas[i]*deltas[j]*Distance[i,j]
+        for j in range(i + 1, nAT):
+            res = res + deltas[i] * deltas[j] * Distance[i, j]
     return numpy.log10(res)
-    
+
+
 def CalculatePolarityNumber(mol):
     """
-    Calculation of Polarity number.
-    It is the number of pairs of vertexes at
-    distance matrix equal to 3
-    ---->Pol
-    Usage: 
-        result=CalculatePolarityNumber(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Polarity number (Pol): It is the number of pairs of vertexes
+    at distance matrix equal to 3
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Pol: Gutman molecular topological index
     """
-    Distance= Chem.GetDistanceMatrix(mol)
-    res=1./2*sum(sum(Distance==3))    
+    Distance = Chem.GetDistanceMatrix(mol)
+    res = 1. / 2 * sum(sum(Distance == 3))
     return res
+
 
 def CalculatePoglianiIndex(mol):
     """
@@ -177,282 +177,306 @@ def CalculatePoglianiIndex(mol):
     The Pogliani index (Dz) is the sum over all non-hydrogen atoms
     of a modified vertex degree calculated as the ratio
     of the number of valence electrons over the principal
-    quantum number of an atom [L. Pogliani, J.Phys.Chem.
-    1996, 100, 18065-18077].
-    ---->DZ
-    Usage: 
-        result=CalculatePoglianiIndex(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    quantum number of an atom
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Dz: Pogliani index
     """
-    res=0.0
+    res = 0.0
     for atom in mol.GetAtoms():
-        n=atom.GetAtomicNum()
-        nV=periodicTable.GetNOuterElecs(n)
-        mP=_GetPrincipleQuantumNumber(n)
-        res=res+(nV+0.0)/mP
+        n = atom.GetAtomicNum()
+        nV = periodicTable.GetNOuterElecs(n)
+        mP = _GetPrincipalQuantumNumber(n)
+        res = res + (nV + 0.0) / mP
     return res
 
-def CalculateIpc(mol):    
+
+def CalculateIpc(mol):
     """
-    This returns the information content of the coefficients of the 
-    characteristic polynomial of the adjacency matrix of a 
-    hydrogen-suppressed graph of a molecule.
-    'avg = 1' returns the information content divided by the total
-    population.
-    From D. Bonchev & N. Trinajstic, J. Chem. Phys. vol 67,
-    4517-4533 (1977)
-     ---->Ipc(log value)
-    Usage: 
-        result=CalculateIpc(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+    Ipc index is the information for polynomial coefficients
+    based information theory.
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Ipc: Ipc index
     """
-    temp=GD.Ipc(mol)
-    if temp>0:
+    temp = GD.Ipc(mol)
+    if temp > 0:
         return numpy.log10(temp)
     else:
         return "NaN"
 
 
 def CalculateBertzCT(mol):
-    """ 
-    A topological index meant to quantify "complexity" of molecules.
-    Consists of a sum of two terms, one representing the complexity
-    of the bonding, the other representing the complexity of the
-    distribution of heteroatoms.
-    From S. H. Bertz, J. Am. Chem. Soc., vol 103, 3599-3601 (1981)    
-    ---->BertzCT(log value)
-    Usage: 
-        result=CalculateBertzCT(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
     """
-    temp=GD.BertzCT(mol)
-    if temp>0:
+    BertzCT index meant to quantify "complexity" of molecules.
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            BertzCT: BertzCT index
+    """
+    temp = GD.BertzCT(mol)
+    if temp > 0:
         return numpy.log10(temp)
     else:
         return "NaN"
 
+
 def CalculateHarary(mol):
     """
-    Calculation of Harary number
-    ---->Thara
-    Usage: 
-        result=CalculateHarary(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
-    """    
-    Distance=numpy.array(Chem.GetDistanceMatrix(mol),'d')         
-    return 1.0/2*(sum(1.0/Distance[Distance!=0]))
-            
+    The Harary index is a molecular topological index derived
+    from the reciprocal distance matrix
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Thara: Thara number
+    """
+    Distance = numpy.array(Chem.GetDistanceMatrix(mol), 'd')
+    return 1.0 / 2 * (sum(1.0 / Distance[Distance != 0]))
+
+
 def CalculateSchiultz(mol):
     """
     Calculation of Schiultz number
-    ---->Tsch(log value)
-    Usage: 
-        result=CalculateSchiultz(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Tsch: Thara number
     """
-    Distance=numpy.array(Chem.GetDistanceMatrix(mol),'d')
-    Adjacent=numpy.array(Chem.GetAdjacencyMatrix(mol),'d')
-    VertexDegree=sum(Adjacent)    
-    return sum(scipy.dot((Distance+Adjacent),VertexDegree))
+    Distance = numpy.array(Chem.GetDistanceMatrix(mol), 'd')
+    Adjacent = numpy.array(Chem.GetAdjacencyMatrix(mol), 'd')
+    VertexDegree = sum(Adjacent)
+    return sum(scipy.dot((Distance + Adjacent), VertexDegree))
+
 
 def CalculateZagreb1(mol):
     """
     Calculation of Zagreb index with order 1 in a molecule
-    ---->ZM1
-    Usage: 
-        result=CalculateZagreb1(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
-    """    
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
-    return sum(numpy.array(deltas)**2)
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            ZM1: Zagreb index with order 1
+    """
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
+    return sum(numpy.array(deltas) ** 2)
 
 
-def CalculateZagreb2(mol):    
+def CalculateZagreb2(mol):
     """
     Calculation of Zagreb index with order 2 in a molecule
-    ---->ZM2
-    Usage: 
-        result=CalculateZagreb2(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            ZM2: Zagreb index with order 2
     """
-    ke = [x.GetBeginAtom().GetDegree()*x.GetEndAtom().GetDegree() for x in mol.GetBonds()]    
+    ke = [x.GetBeginAtom().GetDegree() * x.GetEndAtom().GetDegree() for x in mol.GetBonds()]
     return sum(ke)
+
 
 def CalculateMZagreb1(mol):
     """
     Calculation of Modified Zagreb index with order 1 in a molecule
-    ---->MZM1
-    Usage: 
-        result=CalculateMZagreb1(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            ZM1: Modified Zagreb index with order 1
     """
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
     while 0 in deltas:
         deltas.remove(0)
-    deltas=numpy.array(deltas,'d')
-    res=sum((1./deltas)**2)
+    deltas = numpy.array(deltas, 'd')
+    res = sum((1. / deltas) ** 2)
     return res
-    
+
+
 def CalculateMZagreb2(mol):
     """
     Calculation of Modified Zagreb index with order 2 in a molecule
-    ---->MZM2
-    Usage: 
-        result=CalculateMZagreb2(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            ZM2: Zagreb index with order 2
     """
-    cc = [x.GetBeginAtom().GetDegree()*x.GetEndAtom().GetDegree() for x in mol.GetBonds()]
+    cc = [x.GetBeginAtom().GetDegree() * x.GetEndAtom().GetDegree() for x in mol.GetBonds()]
     while 0 in cc:
         cc.remove(0)
-    cc = numpy.array(cc,'d')
-    res = sum((1./cc)**2)
+    cc = numpy.array(cc, 'd')
+    res = sum((1. / cc) ** 2)
     return res
+
 
 def CalculateQuadratic(mol):
     """
     Calculation of Quadratic index in a molecule
-    ---->Qindex
-    Usage: 
-        result=CalculateQuadratic(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Qindex: Quadratic index
     """
-    M=CalculateZagreb1(mol)
-    N=mol.GetNumAtoms()
-    return 3-2*N+M/2.0
+    M = CalculateZagreb1(mol)
+    N = mol.GetNumAtoms()
+    return 3 - 2 * N + M / 2.0
+
 
 def CalculatePlatt(mol):
     """
     Calculation of Platt number in a molecule
-    ---->Platt
-    Usage: 
-        result=CalculatePlatt(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Platt: Platt number
     """
-    cc = [x.GetBeginAtom().GetDegree()+x.GetEndAtom().GetDegree()-2 for x in mol.GetBonds()]
+    cc = [x.GetBeginAtom().GetDegree() + x.GetEndAtom().GetDegree() - 2 for x in mol.GetBonds()]
     return sum(cc)
+
 
 def CalculateSimpleTopoIndex(mol):
     """
     Calculation of the logarithm of the simple topological index by Narumi,
     which is defined as the product of the vertex degree.
-    ---->Sito
-    Usage: 
-        result=CalculateSimpleTopoIndex(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Sito: log of simple topological index
     """
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
     while 0 in deltas:
         deltas.remove(0)
-    deltas=numpy.array(deltas,'d')
-    
-    res=numpy.prod(deltas)
-    if res>0:
+    deltas = numpy.array(deltas, 'd')
+
+    res = numpy.prod(deltas)
+    if res > 0:
         return numpy.log10(res)
     else:
-        return "NaN"
+        return None
+
 
 def CalculateHarmonicTopoIndex(mol):
     """
     Calculation of harmonic topological index proposed by Narnumi.
-    ---->Hato
-    Usage: 
-        result=CalculateHarmonicTopoIndex(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Hamo: harmonic tological index
     """
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
     while 0 in deltas:
         deltas.remove(0)
-    deltas=numpy.array(deltas,'d')  
-    nAtoms=mol.GetNumAtoms()    
-    res=nAtoms/sum(1./deltas)
+    deltas = numpy.array(deltas, 'd')
+    nAtoms = mol.GetNumAtoms()
+    res = nAtoms / sum(1. / deltas)
     return res
+
 
 def CalculateGeometricTopoIndex(mol):
     """
     Geometric topological index by Narumi
-    ---->Geto
-    Usage: 
-        result=CalculateGeometricTopoIndex(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Geto: Geometric topological index
     """
-    nAtoms=mol.GetNumAtoms()
-    deltas=[x.GetDegree() for x in mol.GetAtoms()]
+    nAtoms = mol.GetNumAtoms()
+    deltas = [x.GetDegree() for x in mol.GetAtoms()]
     while 0 in deltas:
         deltas.remove(0)
-    deltas=numpy.array(deltas,'d')    
-    temp=numpy.prod(deltas)
-    res=numpy.power(temp,1./nAtoms)
-    return res    
+    deltas = numpy.array(deltas, 'd')
+    temp = numpy.prod(deltas)
+    res = numpy.power(temp, 1. / nAtoms)
+    return res
+
+
+def CalculateGraphDistance(mol):
+    """
+    Calculation of graph distance index
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Tigdi: graph topological index
+
+    """
+    Distance = Chem.GetDistanceMatrix(mol)
+    n = int(Distance.max())
+    if n == 1e8:
+        return None
+
+    else:
+        res = 0.0
+        for i in range(n):
+            temp = 1. / 2 * sum(sum(Distance == i + 1))
+            res = res + temp ** 2
+        return numpy.log10(res)
+
 
 def CalculateArithmeticTopoIndex(mol):
     """
     Arithmetic topological index by Narumi
-    ---->Arto
-    Usage: 
-        result=CalculateArithmeticTopoIndex(mol)
-        Input: mol is a molecule object
-        Output: result is a numeric value
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            Arto: Arithmatic topological index
     """
-    nAtoms=mol.GetNumAtoms()
-    nBonds=mol.GetNumBonds()    
-    res=2.*nBonds/nAtoms
+    nAtoms = mol.GetNumAtoms()
+    nBonds = mol.GetNumBonds()
+    res = 2. * nBonds / nAtoms
     return res
 
-_Topology={'W':CalculateWeiner,
-           'AW':CalculateMeanWeiner,
-           'J':CalculateBalaban,
-           'Xu':CalculateXuIndex,
-           'GMTI':CalculateGutmanTopo,
-           'Pol':CalculatePolarityNumber,
-           'DZ':CalculatePoglianiIndex,
-           'Ipc':CalculateIpc,
-           'BertzCT':CalculateBertzCT,
-           'Thara':CalculateHarary,
-           'Tsch':CalculateSchiultz,
-           'ZM1':CalculateZagreb1,
-           'ZM2':CalculateZagreb2,           
-	   'MZM1':CalculateMZagreb1,
-           'MZM2':CalculateMZagreb2,
-           'Qindex':CalculateQuadratic,
-           'Platt':CalculatePlatt,
-           'diametert':CalculateDiameter,
-           'radiust':CalculateRadius,
-           'petitjeant':CalculatePetitjean,
-           'Sito':CalculateSimpleTopoIndex,
-           'Hato':CalculateHarmonicTopoIndex,
-           'Geto':CalculateGeometricTopoIndex,
-           'Arto':CalculateArithmeticTopoIndex      
-    }
-    
+
+_Topology = {'W': CalculateWeiner,
+             'AW': CalculateMeanWeiner,
+             'J': CalculateBalaban,
+             'Xu': CalculateXuIndex,
+             'GMTI': CalculateGutmanTopo,
+             'Pol': CalculatePolarityNumber,
+             'DZ': CalculatePoglianiIndex,
+             'Ipc': CalculateIpc,
+             'BertzCT': CalculateBertzCT,
+             'Thara': CalculateHarary,
+             'Tsch': CalculateSchiultz,
+             'ZM1': CalculateZagreb1,
+             'ZM2': CalculateZagreb2,
+             'MZM1': CalculateMZagreb1,
+             'MZM2': CalculateMZagreb2,
+             'Qindex': CalculateQuadratic,
+             'Platt': CalculatePlatt,
+             'diametert': CalculateDiameter,
+             'radiust': CalculateRadius,
+             'petitjeant': CalculatePetitjean,
+             'Sito': CalculateSimpleTopoIndex,
+             'Hato': CalculateHarmonicTopoIndex,
+             'Geto': CalculateGeometricTopoIndex,
+             'Arto': CalculateArithmeticTopoIndex,
+             'Tigdi': CalculateGraphDistance
+             }
+
+
 def GetTopologyofMol(mol):
     """
-    Get the dictionary of constitutional descriptors for given
-    molecule mol
-    Usage: 
-        result=CalculateWeiner(mol)
-        Input: mol is a molecule object
-        Output: result is a dict form containing all topological indices.
+    Get the dictionary of constitutional descriptors for
+    a given molecule
+        Parameters:
+            mol: RDKit molecule object
+        Returns:
+            result: Dict with descriptor name as key and
+                    value as the descriptor value
     """
-    result={}
+    result = {}
     for DesLabel in _Topology.keys():
-        result[DesLabel]=round(_Topology[DesLabel](mol),3)
+        result[DesLabel] = _Topology[DesLabel](mol)
     return result
 
-def GetTopology(df_x):
+
+def getTopology(df_x):
+    """
+    Calculates all topology descriptors for the dataset
+        Parameters:
+            df_x: pandas.DataFrame
+                SMILES DataFrame
+        Returns:
+            topology_descriptors: pandas.DataFrame
+                Topology Descriptors DataFrame
+    """
     r = {}
     for key in _Topology.keys():
         r[key] = []
@@ -461,4 +485,5 @@ def GetTopology(df_x):
         res = GetTopologyofMol(mol)
         for key in _Topology.keys():
             r[key].append(res[key])
-    return pd.DataFrame(r)
+    topology_descriptors = pd.DataFrame(r).round(3)
+    return pd.DataFrame(topology_descriptors)
