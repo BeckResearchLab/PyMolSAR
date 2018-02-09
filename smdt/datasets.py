@@ -22,3 +22,20 @@ def usp_inhibition():
     if 'Unnamed: 0' in data.columns:
         data.drop(['Unnamed: 0'], axis=1, inplace=True)
     return data
+
+
+def melting_point():
+    """
+    Import the Melting Points dataset
+        Parameters:
+            None
+        Returns:
+            melting_point_dataset: pandas.DataFrame
+                DataFrame containing descriptors and target data.
+    """
+    data_path = os.path.join(smdt.__path__[0], 'examples')
+    data_path = os.path.join(data_path, 'MeltingPoint.csv')
+    data = pd.read_csv(data_path)
+    if 'Unnamed: 0' in data.columns:
+        data.drop(['Unnamed: 0'], axis=1, inplace=True)
+    return data

@@ -10,7 +10,10 @@ from smdt import utils
 import numpy as np
 import pandas as pd
 from smdt import utils
+from sklearn.preprocessing import StandardScaler
+
 pd.options.mode.use_inf_as_null = True
+
 
 
 def missing_value_imputation(file, missing_value_type="NaN", strategy="mean", axis=0):
@@ -115,7 +118,7 @@ def univariate_feature_selection(file, k_value=10, score_function="f_regression"
         selector = SelectKBest(mutual_info_regression, k_value)
     descriptors, target = utils.descriptor_target_split(file)
     column_list = list(descriptors.columns)
-    transformed_arrays = selector.fit_transform(descriptors, target)
+    transformed_arrays = selector.fit_transform(descriptors, target.values.ravel())
     transformed_columns_list = [column_list[i] for i in selector.get_support(indices=True)]
     file = pd.DataFrame(transformed_arrays, columns=transformed_columns_list)
     file = utils.descriptor_target_join(file, target)
@@ -150,7 +153,7 @@ def tree_based_feature_selection(file, n_estimators_value=10, max_features_value
     """
     descriptors, target = utils.descriptor_target_split(file)
     column_list = list(descriptors.columns)
-    clf = ExtraTreesClassifier(n_estimators=n_estimators_value, max_features=max_features_value)
+    clf = ExtraTreesRegressor(n_estimators=n_estimators_value, max_features=max_features_value)
     clf = clf.fit(descriptors, target)
     model = SelectFromModel(clf, prefit=True, threshold=threshold_value)
     transformed_arrays = model.transform(descriptors)
@@ -178,3 +181,31 @@ def rfe_feature_selection(file, step_value=1, max_features_value=3):
     """
     return
 
+
+def data_standardization(train, test):
+    """
+    Scales descriptors to zero mean and unit variance
+    Parameters:
+        file: pandas.DataFrame
+            Descriptor and Target Data
+    Returns:
+        scaled_file: pandas.DataFrame
+            Scaled Descriptor and Target Data
+    """
+    train_descriptors, train_target = utils.descriptor_target_split(train)
+    test_descriptors, test_target = utils.descriptor_target_split(test)
+    columns = train_descriptors.columns
+    scalar = StandardScaler().fit(train_descriptors)
+
+    scaled_train_descriptors = scalar.transform(train_descriptors)
+    scaled_train_descriptors = pd.DataFrame(scaled_train_descriptors)
+    scaled_train_descriptors.columns = columns
+
+    scaled_test_descriptors = scalar.transform(test_descriptors)
+    scaled_test_descriptors = pd.DataFrame(scaled_test_descriptors)
+    scaled_test_descriptors.columns = columns
+
+    scaled_train = utils.descriptor_target_join(scaled_train_descriptors, train_target)
+    scaled_test = utils.descriptor_target_join(scaled_test_descriptors, train_target)
+
+    return scaled_train, scaled_test
