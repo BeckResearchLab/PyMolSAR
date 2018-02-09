@@ -6,7 +6,7 @@ import smdt
 import numpy as np
 import pandas as pd
 import os
-pd.options.mode.use_inf_as_null = True
+pd.options.mode.use_inf_as_na = True
 
 
 def test_train_split(file, test_size_value=0.25, train_size_value=None):

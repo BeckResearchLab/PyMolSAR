@@ -86,7 +86,7 @@ def CalculateHeavyAtomNumber(mol):
         Returns:
             Heavy Atom Number
     """
-    return mol.GetNumAtoms(onlyHeavy=1)
+    return mol.GetNumHeavyAtoms()
 
 
 def _CalculateElementNumber(mol, AtomicNumber=6):

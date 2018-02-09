@@ -151,63 +151,40 @@ def getAllDescriptorsforMol(mol):
 
     return final_values
 
+descriptor_fn = {'topology': topology.GetTopologyofMol, 'constitutional': constitution.GetConstitutionalofMol,
+    'burden': burden.GetBurdenofMol, 'basak': basak.GetBasakofMol, 'cats2d': cats2d.CATS2DforMol,
+    'charge': charge.GetChargeforMol, 'connectivity': connectivity.GetConnectivityforMol, 'estate': estate._GetEstateforMol,
+    'geary': geary.GetGearyAutoofMol, 'kappa': kappa.GetKappaofMol, 'moe': moe.GetMOEofMol, 'moran': moran.GetMoranAutoofMol,
+    'moreaubroto': moreaubroto.GetMoreauBrotoAutoofMol}
 
-def getAllDescriptors(data, nums=None, nprocs=1):
-    if nums == None:
-        nums = list(data.index)
+descriptor_list = {'topology': _topology, 'constitutional': _constitutional, 'burden': _bcut, 'basak': _basak,
+                   'cats2d': _cats2d, 'charge': _charge, 'connectivity': _connectivity, 'estate': _estate,
+                   'geary': _geary, 'kappa': _kappa, 'moe': _moe, 'moran': _moran, 'moreaubroto': _moreaubroto}
+
+
+def getDescriptors(data, descriptor_type = 'topology'):
     smiles, target = utils.descriptor_target_split(data)
-    def worker(nums, out_q):
-        """ The worker function, invoked in a process. 'nums' is a
-            list of numbers to factor. The results are placed in
-            a dictionary that's pushed to a queue.
-        """
-        outdict = {}
-        for n in nums:
-            mol = Chem.MolFromSmiles(smiles['SMILES'][n])
-            outdict[n] = getAllDescriptorsforMol(mol)
-        out_q.put(outdict)
-
-    # Each process will get 'chunksize' nums and a queue to put his out
-    # dict into
-    out_q = Queue()
-    chunksize = int(math.ceil(len(nums) / float(nprocs)))
-    procs = []
-
-    for i in range(nprocs):
-        p = multiprocessing.Process(
-            target=worker,
-            args=(nums[chunksize * i:chunksize * (i + 1)],
-                  out_q))
-        procs.append(p)
-        p.start()
-
-    # Collect all results into a single result dict. We know how many dicts
-    # with results to expect.
-    resultdict = {}
-    for i in range(nprocs):
-        resultdict.update(out_q.get())
-
-    # Wait for all worker processes to finish
-    for p in procs:
-        p.join()
-
-
-    cols = _topology + _constitutional + _bcut + _basak + _cats2d + _charge + _connectivity + _estate + _geary + _kappa + _moe + _moran + _moreaubroto
+    cols = descriptor_list[descriptor_type]
     AllDescriptors = pd.DataFrame(columns=cols)
-    for i in resultdict.keys():
-        AllDescriptors.loc[i] = resultdict[i]
-
+    print('\nCalculating %s descriptors...'%descriptor_type)
+    for i in range(len(smiles)):
+        print('Row %d out of %d' % (i + 1, len(smiles)), end='')
+        print('\r', end='')
+        AllDescriptors.loc[i] = descriptor_fn[descriptor_type](Chem.MolFromSmiles(smiles['SMILES'][i]))
     final_df = utils.descriptor_target_join(AllDescriptors, target)
-
+    print('\nCalculating %s descriptors completed.'%descriptor_type)
     return final_df
 
 
-def getAllDesc(data):
+def getAllDescriptors(data):
     smiles, target = utils.descriptor_target_split(data)
     cols = _topology + _constitutional + _bcut + _basak + _cats2d + _charge + _connectivity + _estate + _geary + _kappa + _moe + _moran + _moreaubroto
     AllDescriptors = pd.DataFrame(columns=cols)
+    print('\nCalculating Molecular Descriptors...')
     for i in range(len(smiles)):
-        AllDescriptors.loc[i] = molecular_descriptors.getAllDescriptorsforMol(Chem.MolFromSmiles(smiles['SMILES'][i]))
+        print('Row %d out of %d' % (i + 1, len(smiles)), end='')
+        print('\r', end='')
+        AllDescriptors.loc[i] = getAllDescriptorsforMol(Chem.MolFromSmiles(smiles['SMILES'][i]))
     final_df = utils.descriptor_target_join(AllDescriptors, target)
-
+    print('\nCalculating Molecular Descriptors Completed.')
     return final_df

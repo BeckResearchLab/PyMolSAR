@@ -4,7 +4,7 @@
 import smdt
 import pandas as pd
 import os
-pd.options.mode.use_inf_as_null = True
+pd.options.mode.use_inf_as_na = True
 
 
 def usp_inhibition():

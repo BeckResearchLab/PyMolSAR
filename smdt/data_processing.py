@@ -3,7 +3,7 @@
 # Imports
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.feature_selection import SelectKBest
-from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import train_test_split
 from smdt import utils
@@ -12,7 +12,7 @@ import pandas as pd
 from smdt import utils
 from sklearn.preprocessing import StandardScaler
 
-pd.options.mode.use_inf_as_null = True
+pd.options.mode.use_inf_as_na = True
 
 
 
