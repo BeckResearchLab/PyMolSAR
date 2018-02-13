@@ -11,7 +11,7 @@ def CalculateKappa1(mol):
     Calculation of molecular shape index for one bonded fragment
     """
     P1 = mol.GetNumBonds(onlyHeavy=1)
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
     denom = P1 + 0.0
     if denom:
         kappa = (A) * (A - 1) ** 2 / denom ** 2
@@ -25,7 +25,7 @@ def CalculateKappa2(mol):
     Calculation of molecular shape index for two bonded fragment
     """
     P2 = len(Chem.FindAllPathsOfLengthN(mol, 2))
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
 
     denom = P2 + 0.0
     if denom:
@@ -40,7 +40,7 @@ def CalculateKappa3(mol):
     Calculation of molecular shape index for three bonded fragment
     """
     P3 = len(Chem.FindAllPathsOfLengthN(mol, 3))
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
 
     denom = P3 + 0.0
     if denom:
@@ -85,7 +85,7 @@ def CalculateKappaAlapha1(mol):
     Calculation of molecular shape index for one bonded fragment
     """
     P1 = mol.GetNumBonds(onlyHeavy=1)
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
     alpha = _HallKierAlpha(mol)
     denom = P1 + alpha
     if denom:
@@ -100,7 +100,7 @@ def CalculateKappaAlapha2(mol):
     Calculation of molecular shape index for two bonded fragment
     """
     P2 = len(Chem.FindAllPathsOfLengthN(mol, 2))
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
     alpha = _HallKierAlpha(mol)
     denom = P2 + alpha
     if denom:
@@ -115,7 +115,7 @@ def CalculateKappaAlapha3(mol):
     Calculation of molecular shape index for three bonded fragment
     """
     P3 = len(Chem.FindAllPathsOfLengthN(mol, 3))
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
     alpha = _HallKierAlpha(mol)
     denom = P3 + alpha
     if denom:
@@ -134,7 +134,7 @@ def CalculateFlexibility(mol):
     """
     kappa1 = CalculateKappaAlapha1(mol)
     kappa2 = CalculateKappaAlapha2(mol)
-    A = mol.GetNumAtoms(onlyHeavy=1)
+    A = mol.GetNumHeavyAtoms()
     phi = kappa1 * kappa2 / (A + 0.0)
     return phi
 

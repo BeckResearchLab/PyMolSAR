@@ -80,7 +80,6 @@ def svr_model(data, standardize=True, feature_selection=None, n_features=10, cv_
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -145,7 +144,6 @@ def linear_model(data, standardize=True, feature_selection=None, n_features=10):
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -219,7 +217,6 @@ def random_forest_model(data, standardize=True, feature_selection=None, n_featur
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -293,7 +290,6 @@ def extra_trees_model(data, standardize=True, feature_selection=None, n_features
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -367,7 +363,6 @@ def gradient_boosting_model(data, standardize=True, feature_selection=None, n_fe
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -441,7 +436,6 @@ def sgd_model(data, standardize=True, feature_selection=None, n_features=10, cv_
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -509,7 +503,6 @@ def ridge_model(data, standardize=True, feature_selection=None, n_features=10, c
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)
@@ -577,7 +570,6 @@ def lasso_model(data, standardize=True, feature_selection=None, n_features=10):
     metric['r2'] = round(metrics.regression.r2_score(test_target, y_pred))
     metric['mean absolute error'] = round(metrics.regression.mean_absolute_error(test_target, y_pred))
     metric['explained r2'] = round(metrics.regression.explained_variance_score(test_target, y_pred))
-    metric['mean squared log error'] = round(metrics.regression.mean_squared_log_error(test_target, y_pred))
     metric['median absolute error'] = round(metrics.regression.median_absolute_error(test_target, y_pred))
 
     print(metric)

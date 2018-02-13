@@ -11,10 +11,27 @@ import numpy as np
 import pandas as pd
 from smdt import utils
 from sklearn.preprocessing import StandardScaler
+from rdkit import Chem
 
-pd.options.mode.use_inf_as_na = True
+pd.set_option.use_inf_as_na = True
 
 
+def smiles_validation(data):
+    """
+        Parameters:
+            data: {array-like, sparse matrix}
+                Sample vectors which may have faulty SMILES
+        Returns:
+            data: {array-like, sparse matrix}
+    """
+    for i in data.index:
+        try:
+            a = Chem.MolFromSmiles(data['SMILES'][i])
+            Chem.GetDistanceMatrix(a)
+        except:
+            data.drop(i,inplace=True)
+    data.reset_index(inplace=True)
+    return data
 
 def missing_value_imputation(file, missing_value_type="NaN", strategy="mean", axis=0):
     """
