@@ -1,0 +1,35 @@
+README.md
+setup.py
+smdt/__init__.py
+smdt/classification.py
+smdt/data_processing.py
+smdt/datasets.py
+smdt/molecular_descriptors.py
+smdt/regression.py
+smdt/utils.py
+smdt/version.py
+smdt.egg-info/PKG-INFO
+smdt.egg-info/SOURCES.txt
+smdt.egg-info/dependency_links.txt
+smdt.egg-info/requires.txt
+smdt.egg-info/top_level.txt
+smdt/descriptors/AtomProperty.py
+smdt/descriptors/AtomTypes.py
+smdt/descriptors/__init__.py
+smdt/descriptors/basak.py
+smdt/descriptors/burden.py
+smdt/descriptors/cats2d.py
+smdt/descriptors/charge.py
+smdt/descriptors/connectivity.py
+smdt/descriptors/constitution.py
+smdt/descriptors/estate.py
+smdt/descriptors/geary.py
+smdt/descriptors/kappa.py
+smdt/descriptors/moe.py
+smdt/descriptors/moran.py
+smdt/descriptors/moreaubroto.py
+smdt/descriptors/topology.py
+smdt/examples/Li Blood-Brain-Barrier Penetration Set.csv
+smdt/examples/MeltingPoint.csv
+smdt/examples/Sigma-2 Receptor Selective Ligands.csv
+smdt/examples/USP-Inhibition.csv
