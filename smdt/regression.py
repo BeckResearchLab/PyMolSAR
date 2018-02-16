@@ -24,12 +24,13 @@ def fit_Ridge(X_train, X_test, y_train, y_test):
     # Grid Search CV
     clf = RidgeCV(cv=10)
     clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
     # Metrics
     print('Training data GridSearchCV best r2 score: %.5f' % clf.score(X_train, y_train))
     print('Testing Data Classification r2 score: %.5f' % clf.score(X_test, y_test))
 
-    return clf
+    return clf, y_pred
 
 
 def fit_ElasticNet(X_train, X_test, y_train, y_test):
@@ -42,12 +43,13 @@ def fit_ElasticNet(X_train, X_test, y_train, y_test):
     # Grid Search CV
     clf = ElasticNetCV(cv=10)
     clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
     # Metrics
     print('Training data GridSearchCV best r2 score: %.5f' % clf.score(X_train, y_train))
     print('Testing Data Classification r2 score: %.5f' % clf.score(X_test, y_test))
 
-    return clf
+    return clf, y_pred
 
 
 def fit_LinearSVR(X_train, X_test, y_train, y_test,n_features):
@@ -67,12 +69,13 @@ def fit_LinearSVR(X_train, X_test, y_train, y_test,n_features):
     parameters = {'C':[1,5,10],'loss':['epsilon_insensitive','squared_epsilon_insensitive'],'epsilon':[0,0.1]}
     grid = GridSearchCV(clf, parameters)
     grid.fit(X_train, y_train)
+    y_pred = grid.predict(X_test)
 
     # Metrics
     print('Training data GridSearchCV best r2 score: %.5f' % grid.best_score_)
     print('Testing Data Classification r2 score: %.5f' % grid.score(X_test, y_test))
 
-    return grid
+    return grid, y_pred
 
 
 def fit_Lasso(X_train, X_test, y_train, y_test):
@@ -85,12 +88,13 @@ def fit_Lasso(X_train, X_test, y_train, y_test):
     # Grid Search CV
     clf = LassoCV(cv=10)
     clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
     # Metrics
     print('Training data GridSearchCV best r2 score: %.5f' % clf.score(X_train, y_train))
     print('Testing Data Classification r2 score: %.5f' % clf.score(X_test, y_test))
 
-    return clf
+    return clf, y_pred
 
 
 def fit_RandomForestRegressor(X_train, X_test, y_train, y_test, n_features):
@@ -111,11 +115,12 @@ def fit_RandomForestRegressor(X_train, X_test, y_train, y_test, n_features):
                   "max_depth": [3, None], "min_samples_split": [2, 3, 10], "min_samples_leaf": [1, 3, 10]}
     grid = GridSearchCV(clf, parameters)
     grid.fit(X_train, y_train)
+    y_pred = grid.predict(X_test)
 
     # Metrics
     print('Training data GridSearchCV best r2 score: %.5f' % grid.best_score_)
     print('Testing Data Regression r2 score: %.5f' % grid.score(X_test, y_test))
 
-    return grid
+    return grid, y_pred
 
 
