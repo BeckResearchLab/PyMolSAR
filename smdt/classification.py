@@ -32,15 +32,18 @@ def fit_RandomForestClassifier(X_train, X_test, y_train, y_test, n_features):
                   'max_features': ['auto', 'sqrt', 'log2'], 'oob_score': [True, False], 'verbose': [0]}
     grid = GridSearchCV(clf, parameters)
     grid.fit(X_train, y_train)
+    y_pred = grid.predict(X_test)
+    y_score = grid.predict_proba(X_test)
+
 
     # Metrics
     print('Training data GridSearchCV accuracy: %.5f' % grid.best_score_)
     print('Testing Data Classification accuracy: %.5f' % grid.score(X_test, y_test))
     print()
     print('Classification Report:')
-    print(metrics.classification_report(y_test, grid.predict(X_test)))
+    print(metrics.classification_report(y_test, y_pred))
 
-    return grid
+    return grid, y_pred, y_score
 
 
 def fit_LinearSVC(X_train, X_test, y_train, y_test, n_features):
@@ -63,15 +66,17 @@ def fit_LinearSVC(X_train, X_test, y_train, y_test, n_features):
                   {'C': [1, 10, 100], 'penalty': ['l2'], 'dual': [True], 'loss': ['hinge']}]
     grid = GridSearchCV(clf, parameters, cv=10)
     grid.fit(X_train, y_train)
+    y_pred = grid.predict(X_test)
+    y_score = grid.decision_function(X_test)
 
     # Metrics
     print('Training data GridSearchCV accuracy: %.5f' % grid.best_score_)
     print('Testing Data Classification accuracy: %.5f' % grid.score(X_test, y_test))
     print()
     print('Classification Report:')
-    print(metrics.classification_report(y_test, grid.predict(X_test)))
+    print(metrics.classification_report(y_test, y_pred))
 
-    return grid
+    return grid, y_pred, y_score
 
 
 def fit_GaussianNB(X_train, X_test, y_train, y_test, n_features):
@@ -89,15 +94,17 @@ def fit_GaussianNB(X_train, X_test, y_train, y_test, n_features):
     # Grid Search CV
     clf = GaussianNB()
     clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    y_score = clf.predict_proba(X_test)
 
     # Metrics
     print('Training data GridSearchCV accuracy: %.5f' % clf.score(X_train, y_train))
     print('Testing Data Classification accuracy: %.5f' % clf.score(X_test, y_test))
     print()
     print('Classification Report:')
-    print(metrics.classification_report(y_test, clf.predict(X_test)))
+    print(metrics.classification_report(y_test, y_pred))
 
-    return clf
+    return clf, y_pred, y_score
 
 
 def fit_KNearestNeighbors(X_train, X_test, y_train, y_test, n_features):
@@ -119,15 +126,18 @@ def fit_KNearestNeighbors(X_train, X_test, y_train, y_test, n_features):
                    'algorithm': ['auto', 'ball_tree', 'kd_tree']}]
     grid = GridSearchCV(clf, parameters, cv=10)
     grid.fit(X_train, y_train)
+    y_pred = grid.predict(X_test)
+    y_score = grid.predict_proba(X_test)
+
 
     # Metrics
     print('Training data GridSearchCV accuracy: %.5f' % grid.best_score_)
     print('Testing Data Classification accuracy: %.5f' % grid.score(X_test, y_test))
     print()
     print('Classification Report:')
-    print(metrics.classification_report(y_test, grid.predict(X_test)))
+    print(metrics.classification_report(y_test, y_pred))
 
-    return clf
+    return grid, y_pred, y_score
 
 
 def fit_SGDClassifier(X_train, X_test, y_train, y_test, n_features):
@@ -149,12 +159,14 @@ def fit_SGDClassifier(X_train, X_test, y_train, y_test, n_features):
         {'loss': ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'], 'alpha': [0.0001, 0.00001]}]
     grid = GridSearchCV(clf, parameters, cv=10)
     grid.fit(X_train, y_train)
+    y_pred = grid.predict(X_test)
+    y_score = grid.decision_function(X_test)
 
     # Metrics
     print('Training data GridSearchCV accuracy: %.5f' % grid.best_score_)
     print('Testing Data Classification accuracy: %.5f' % grid.score(X_test, y_test))
     print()
     print('Classification Report:')
-    print(metrics.classification_report(y_test, grid.predict(X_test)))
+    print(metrics.classification_report(y_test, y_pred))
 
-    return clf
+    return grid, y_pred, y_score
