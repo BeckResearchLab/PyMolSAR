@@ -117,3 +117,16 @@ def plot_confusion_matrix(cm, classes,
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+
+def plot_parity(models, y_pred, y_test):
+
+    plt.figure(figsize=(15,3))
+    for i in range(len(models)):
+        plt.subplot(100+len(models)*10+1+i)
+        plt.scatter(y_test, y_pred[i], edgecolors=(0, 0, 0), alpha=0.5)
+        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()],'r--', lw=4)
+        plt.xlabel('Measured')
+        plt.ylabel('Predicted')
+        plt.title('Parity Plot for %s'%models[i])
+
+    plt.show()
