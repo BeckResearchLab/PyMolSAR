@@ -31,7 +31,7 @@ def fit_RandomForestClassifier(X_train, X_test, y_train, y_test, n_features):
     parameters = {'n_estimators': [10, 100], 'criterion': ['gini', 'entropy'],
                   'max_features': ['auto', 'sqrt', 'log2'], 'oob_score': [True, False], 'verbose': [0],
                   'class_weight': ['balanced',None]}
-    grid = GridSearchCV(clf, parameters)
+    grid = GridSearchCV(clf, parameters, cv=10, scoring='f1_weighted')
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
     y_score = grid.predict_proba(X_test)
@@ -65,7 +65,7 @@ def fit_LinearSVC(X_train, X_test, y_train, y_test, n_features):
     clf = LinearSVC()
     parameters = [{'C': [1, 10, 100], 'penalty': ['l1', 'l2'], 'dual': [False], 'loss': ['squared_hinge'], 'class_weight': ['balanced']},
                   {'C': [1, 10, 100], 'penalty': ['l2'], 'dual': [True], 'loss': ['hinge'], 'class_weight': ['balanced']}]
-    grid = GridSearchCV(clf, parameters, cv=10)
+    grid = GridSearchCV(clf, parameters, cv=10, scoring='f1_weighted')
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
     y_score = grid.decision_function(X_test)
@@ -125,7 +125,7 @@ def fit_KNearestNeighbors(X_train, X_test, y_train, y_test, n_features):
 
     parameters = [{'n_neighbors': [5, 8, 10], 'weights': ['uniform', 'distance'], 'p': [1, 2],
                    'algorithm': ['auto', 'ball_tree', 'kd_tree']}]
-    grid = GridSearchCV(clf, parameters, cv=10)
+    grid = GridSearchCV(clf, parameters, cv=10, scoring='f1_weighted')
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
     y_score = grid.predict_proba(X_test)
@@ -158,7 +158,7 @@ def fit_SGDClassifier(X_train, X_test, y_train, y_test, n_features):
 
     parameters = [
         {'loss': ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'], 'alpha': [0.0001, 0.00001], 'class_weight': ['balanced']}]
-    grid = GridSearchCV(clf, parameters, cv=10)
+    grid = GridSearchCV(clf, parameters, cv=10, scoring='f1_weighted')
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
     y_score = grid.decision_function(X_test)
