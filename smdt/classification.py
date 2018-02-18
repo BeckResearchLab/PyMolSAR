@@ -29,7 +29,8 @@ def fit_RandomForestClassifier(X_train, X_test, y_train, y_test, n_features):
     # Grid Search CV
     clf = RandomForestClassifier()
     parameters = {'n_estimators': [10, 100], 'criterion': ['gini', 'entropy'],
-                  'max_features': ['auto', 'sqrt', 'log2'], 'oob_score': [True, False], 'verbose': [0]}
+                  'max_features': ['auto', 'sqrt', 'log2'], 'oob_score': [True, False], 'verbose': [0],
+                  'class_weight': ['balanced',None]}
     grid = GridSearchCV(clf, parameters)
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
@@ -62,8 +63,8 @@ def fit_LinearSVC(X_train, X_test, y_train, y_test, n_features):
 
     # Grid Search CV
     clf = LinearSVC()
-    parameters = [{'C': [1, 10, 100], 'penalty': ['l1', 'l2'], 'dual': [False], 'loss': ['squared_hinge']},
-                  {'C': [1, 10, 100], 'penalty': ['l2'], 'dual': [True], 'loss': ['hinge']}]
+    parameters = [{'C': [1, 10, 100], 'penalty': ['l1', 'l2'], 'dual': [False], 'loss': ['squared_hinge'], 'class_weight': ['balanced']},
+                  {'C': [1, 10, 100], 'penalty': ['l2'], 'dual': [True], 'loss': ['hinge'], 'class_weight': ['balanced']}]
     grid = GridSearchCV(clf, parameters, cv=10)
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
@@ -156,7 +157,7 @@ def fit_SGDClassifier(X_train, X_test, y_train, y_test, n_features):
     clf = SGDClassifier()
 
     parameters = [
-        {'loss': ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'], 'alpha': [0.0001, 0.00001]}]
+        {'loss': ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron'], 'alpha': [0.0001, 0.00001], 'class_weight': ['balanced']}]
     grid = GridSearchCV(clf, parameters, cv=10)
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
