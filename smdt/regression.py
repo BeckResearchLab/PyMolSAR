@@ -31,11 +31,11 @@ def fit_Ridge(X_train, X_test, y_train, y_test):
 
     # Metrics
     metric = [grid.score(X_test, y_test),
-               metrics.explained_variance_score(X_test, y_test),
-               metrics.mean_absolute_error(X_test, y_test),
-               metrics.mean_squared_error(X_test, y_test),
-               metrics.median_absolute_error(X_test, y_test),
-               metrics.r2_score(X_test, y_test)]
+               metrics.explained_variance_score(y_test, y_pred),
+               metrics.mean_absolute_error(y_test, y_pred),
+               metrics.mean_squared_error(y_test, y_pred),
+               metrics.median_absolute_error(y_test, y_pred),
+               metrics.r2_score(y_test, y_pred)]
 
     return grid, y_pred, metric
 
@@ -57,11 +57,11 @@ def fit_ElasticNet(X_train, X_test, y_train, y_test):
 
     # Metrics
     metric = [grid.score(X_test, y_test),
-               metrics.explained_variance_score(X_test, y_test),
-               metrics.mean_absolute_error(X_test, y_test),
-               metrics.mean_squared_error(X_test, y_test),
-               metrics.median_absolute_error(X_test, y_test),
-               metrics.r2_score(X_test, y_test)]
+               metrics.explained_variance_score(y_test, y_pred),
+               metrics.mean_absolute_error(y_test, y_pred),
+               metrics.mean_squared_error(y_test, y_pred),
+               metrics.median_absolute_error(y_test, y_pred),
+               metrics.r2_score(y_test, y_pred)]
 
     return grid, y_pred, metric
 
@@ -83,11 +83,11 @@ def fit_LinearSVR(X_train, X_test, y_train, y_test):
 
     # Metrics
     metric = [grid.score(X_test, y_test),
-               metrics.explained_variance_score(X_test, y_test),
-               metrics.mean_absolute_error(X_test, y_test),
-               metrics.mean_squared_error(X_test, y_test),
-               metrics.median_absolute_error(X_test, y_test),
-               metrics.r2_score(X_test, y_test)]
+               metrics.explained_variance_score(y_test, y_pred),
+               metrics.mean_absolute_error(y_test, y_pred),
+               metrics.mean_squared_error(y_test, y_pred),
+               metrics.median_absolute_error(y_test, y_pred),
+               metrics.r2_score(y_test, y_pred)]
 
     return grid, y_pred, metric
 
@@ -109,11 +109,11 @@ def fit_Lasso(X_train, X_test, y_train, y_test):
 
     # Metrics
     metric = [grid.score(X_test, y_test),
-               metrics.explained_variance_score(X_test, y_test),
-               metrics.mean_absolute_error(X_test, y_test),
-               metrics.mean_squared_error(X_test, y_test),
-               metrics.median_absolute_error(X_test, y_test),
-               metrics.r2_score(X_test, y_test)]
+               metrics.explained_variance_score(y_test, y_pred),
+               metrics.mean_absolute_error(y_test, y_pred),
+               metrics.mean_squared_error(y_test, y_pred),
+               metrics.median_absolute_error(y_test, y_pred),
+               metrics.r2_score(y_test, y_pred)]
 
     return grid, y_pred, metric
 
@@ -137,11 +137,11 @@ def fit_RandomForestRegressor(X_train, X_test, y_train, y_test):
 
     # Metrics
     metric = [grid.score(X_test, y_test),
-               metrics.explained_variance_score(X_test, y_test),
-               metrics.mean_absolute_error(X_test, y_test),
-               metrics.mean_squared_error(X_test, y_test),
-               metrics.median_absolute_error(X_test, y_test),
-               metrics.r2_score(X_test, y_test)]
+               metrics.explained_variance_score(y_test, y_pred),
+               metrics.mean_absolute_error(y_test, y_pred),
+               metrics.mean_squared_error(y_test, y_pred),
+               metrics.median_absolute_error(y_test, y_pred),
+               metrics.r2_score(y_test, y_pred)]
 
     return grid, y_pred, metric
 
