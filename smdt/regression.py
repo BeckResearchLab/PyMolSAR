@@ -76,7 +76,7 @@ def fit_LinearSVR(X_train, X_test, y_train, y_test):
 
     # Grid Search CV
     parameters = {'anova__k': [5, 10, 20, 40],
-                  'C':[1,5,10],'loss':['epsilon_insensitive','squared_epsilon_insensitive'],'epsilon':[0,0.1]}
+                  'rf__C':[1,5,10],'rf__loss':['epsilon_insensitive','squared_epsilon_insensitive'],'rf__epsilon':[0,0.1]}
     grid = GridSearchCV(model, parameters)
     grid.fit(X_train, y_train)
     y_pred = grid.predict(X_test)
@@ -129,7 +129,7 @@ def fit_RandomForestRegressor(X_train, X_test, y_train, y_test):
     # Grid Search CV
     parameters = {'anova__k': [5,10,20,40],
                   'rf__n_estimators': [10, 100], 'rf__criterion': ['mse', 'mae'],
-                  'rf__max_features': [1, 3, 10, 'auto', 'sqrt', 'log2'], 'rf__oob_score': [True, False],
+                  'rf__max_features': ['auto', 'sqrt', 'log2'], 'rf__oob_score': [True, False],
                   "rf__max_depth": [3, None], "rf__min_samples_split": [2, 3, 10], "rf__min_samples_leaf": [1, 3, 10]}
     grid = GridSearchCV(model, parameters)
     grid.fit(X_train, y_train)
