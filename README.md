@@ -1,6 +1,6 @@
-# small-molecule-design-toolkit
-Small-Molecule-Design-Toolkit aims to provide a generalizable open-source tool 
-for calculating 760 molecular descriptors and test out several different supervised learning algorithms to build the most-appropriate Quantitative Structure-Activity Relationship (QSAR) 
+# PyMolSAR
+PyMolSAR aims to provide a generalizable open-source tool 
+for calculating 759 molecular descriptors and test out several different supervised learning algorithms to build the most-appropriate Quantitative Structure-Activity Relationship (QSAR) 
 classification or regression model that accurately predicts the chemical properties or activities of small molecules.
 
 **Table of contents:**
@@ -32,7 +32,7 @@ python setup.py install
 
 ## Getting Started
 
-Two good tutorials to get started are [Melting Point Prediction](http://github.com/BeckResearchLab/small-molecule-design-toolkit/blob/master/notebooks/MeltingPoint.ipynb) and [Lithium Blood-Brain Barrier Penetration Classification](http://github.com/BeckResearchLab/small-molecule-design-toolkit/blob/master/notebooks/Lithium%20Blood-Brain-Barrier%20Penetration.ipynb). 
+Two good tutorials to get started are [Melting Point Prediction](http://github.com/BeckResearchLab/small-molecule-design-toolkit/blob/master/notebooks/MeltingPoint.ipynb) and [Blood-Brain Barrier Permeability](http://github.com/BeckResearchLab/small-molecule-design-toolkit/blob/master/notebooks/Lithium%20Blood-Brain-Barrier%20Penetration.ipynb). 
 Follow along with the tutorials to see how to predict properties on molecules using machine learning.
 
 ### Input Formats
