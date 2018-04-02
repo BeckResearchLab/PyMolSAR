@@ -52,3 +52,4 @@ we need to calculate a set of molecular descriptors using `smdt.molecular_descri
 A model report is generated to facilitate the user to choose the most appropriate Quantitative Structure-Activity Relationship (QSAR) or 
 Quantitative Structure-Property Relationship (QSPR) model.
 
+
