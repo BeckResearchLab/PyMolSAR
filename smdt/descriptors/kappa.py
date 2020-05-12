@@ -1,9 +1,21 @@
 
 from rdkit import Chem
 from rdkit.Chem import rdchem
-from rdkit.Chem import pyPeriodicTable as PeriodicTable
-periodicTable = rdchem.GetPeriodicTable()
+#from rdkit.Chem import pyPeriodicTable as PeriodicTable
+periodicTable = Chem.GetPeriodicTable()
 import pandas as pd
+
+
+hallKierAlphas = {'Br': [None, None, 0.48],
+                  'C': [-0.22, -0.13, 0.0],
+                  'Cl': [None, None, 0.29],
+                  'F': [None, None, -0.07],
+                  'H': [0.0, 0.0, 0.0],
+                  'I': [None, None, 0.73],
+                  'N': [-0.29, -0.2, -0.04],
+                  'O': [None, -0.2, -0.04],
+                  'P': [None, 0.3, 0.43],
+                  'S': [None, 0.22, 0.35]}
 
 
 def CalculateKappa1(mol):
@@ -59,12 +71,12 @@ def _HallKierAlpha(mol):
     Calculation of the Hall-Kier alpha value for a molecule
     """
     alphaSum = 0.0
-    rC = PeriodicTable.nameTable['C'][5]
+    rC = periodicTable.GetRb0(6)
     for atom in mol.GetAtoms():
         atNum = atom.GetAtomicNum()
         if not atNum: continue
         symb = atom.GetSymbol()
-        alphaV = PeriodicTable.hallKierAlphas.get(symb, None)
+        alphaV = hallKierAlphas.get(symb, None)
         if alphaV is not None:
             hyb = atom.GetHybridization() - 2
             if hyb < len(alphaV):
@@ -74,7 +86,7 @@ def _HallKierAlpha(mol):
             else:
                 alpha = alphaV[-1]
         else:
-            rA = PeriodicTable.nameTable[symb][5]
+            rA = periodicTable.GetRb0(atNum)
             alpha = rA / rC - 1
         alphaSum += alpha
     return alphaSum
