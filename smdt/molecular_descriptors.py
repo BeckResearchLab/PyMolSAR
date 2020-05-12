@@ -112,7 +112,7 @@ _moe = ['LabuteASA', 'MTPSA', 'slogPVSA0', 'slogPVSA1', 'slogPVSA2', 'slogPVSA3'
         'PEOEVSA10', 'PEOEVSA11', 'PEOEVSA12', 'PEOEVSA13', 'EstateVSA0', 'EstateVSA1', 'EstateVSA2',
         'EstateVSA3', 'EstateVSA4', 'EstateVSA5', 'EstateVSA6', 'EstateVSA7', 'EstateVSA8', 'EstateVSA9',
         'EstateVSA10', 'VSAEstate0', 'VSAEstate1', 'VSAEstate2', 'VSAEstate3', 'VSAEstate4', 'VSAEstate5',
-        'VSAEstate6', 'VSAEstate7', 'VSAEstate8', 'VSAEstate9', 'VSAEstate10']
+        'VSAEstate6', 'VSAEstate7', 'VSAEstate8', 'VSAEstate9']
 
 _moran = ['MATSm1', 'MATSm2', 'MATSm3', 'MATSm4', 'MATSm5', 'MATSm6', 'MATSm7', 'MATSm8', 'MATSv1',
           'MATSv2', 'MATSv3', 'MATSv4', 'MATSv5', 'MATSv6', 'MATSv7', 'MATSv8', 'MATSe1', 'MATSe2',
@@ -162,6 +162,7 @@ descriptor_list = {'topology': _topology, 'constitutional': _constitutional, 'bu
                    'geary': _geary, 'kappa': _kappa, 'moe': _moe, 'moran': _moran, 'moreaubroto': _moreaubroto}
 
 
+
 def getDescriptors(data, descriptor_type = 'topology'):
     smiles, target = utils.descriptor_target_split(data)
     cols = descriptor_list[descriptor_type]
@@ -180,11 +181,18 @@ def getAllDescriptors(data):
     smiles, target = utils.descriptor_target_split(data)
     cols = _topology + _constitutional + _bcut + _basak + _cats2d + _charge + _connectivity + _estate + _geary + _kappa + _moe + _moran + _moreaubroto
     AllDescriptors = pd.DataFrame(columns=cols)
+    ignore = ['Ta', 'Nb', 'Os', 'Y', 'Ir', 'Re', 'Ba', 'Ac', 'Ti', 'U','V','Hf', 'La', 'Nd', 'Eu', 'Dy', 'Ce', 'Sm', 'Pd', 'Zr', 'Ru', 'W', 'Rh', 'Er', 'Th']
     print('\nCalculating Molecular Descriptors...')
-    for i in range(len(smiles)):
-        print('Row %d out of %d' % (i + 1, len(smiles)), end='')
-        print('\r', end='')
-        AllDescriptors.loc[i] = getAllDescriptorsforMol(Chem.MolFromSmiles(smiles['SMILES'][i]))
+    for i in range(0,len(data)):
+        break_counter = 0;
+        for j in ignore:
+            if j in smiles['SMILES'][i]:
+                break_counter = 1;
+                
+        if break_counter == 0:     
+            print('Row %d out of %d' % (i + 1, len(smiles)), end='')
+            print('\r', end='') 
+            AllDescriptors.loc[i] = getAllDescriptorsforMol(Chem.MolFromSmiles(smiles['SMILES'][i]))
     final_df = utils.descriptor_target_join(AllDescriptors, target)
     print('\nCalculating Molecular Descriptors Completed.')
     return final_df
