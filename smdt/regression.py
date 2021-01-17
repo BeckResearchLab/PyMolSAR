@@ -1,5 +1,9 @@
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import StandardScaler, LabelEncoder, Imputer
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+try:
+    from sklearn.preprocessing import Imputer
+except ImportError:
+    from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import SelectKBest, mutual_info_regression
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LassoCV, RidgeCV, ElasticNetCV

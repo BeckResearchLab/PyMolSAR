@@ -1,7 +1,10 @@
 
 from rdkit import Chem
 from rdkit.Chem import rdchem
-from rdkit.Chem import pyPeriodicTable as PeriodicTable
+try:
+    from rdkit.Chem import pyPeriodicTable as PeriodicTable
+except:
+    from rdkit.Chem import PeriodicTable
 periodicTable = rdchem.GetPeriodicTable()
 import pandas as pd
 
