@@ -1,4 +1,5 @@
-from sklearn.preprocessing import StandardScaler, Imputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer as Imputer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import LinearSVC
@@ -6,7 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classif
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import f1_score, recall_score, make_scorer, classification_report, roc_curve, precision_recall_curve, precision_score, recall_score, accuracy_score, matthews_corrcoef, jaccard_similarity_score, zero_one_loss, auc, roc_auc_score
+from sklearn.metrics import f1_score, recall_score, make_scorer, classification_report, roc_curve, precision_recall_curve, precision_score, recall_score, accuracy_score, matthews_corrcoef, jaccard_score as jaccard_similarity_score, zero_one_loss, auc, roc_auc_score
 from smdt import metrics
 from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt

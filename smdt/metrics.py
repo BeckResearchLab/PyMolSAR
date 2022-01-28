@@ -1,5 +1,5 @@
 
-from sklearn.metrics import f1_score, recall_score, make_scorer, classification_report, roc_curve, precision_recall_curve, precision_score, recall_score, accuracy_score, matthews_corrcoef, jaccard_similarity_score, zero_one_loss, auc, roc_auc_score
+from sklearn.metrics import f1_score, recall_score, make_scorer, classification_report, roc_curve, precision_recall_curve, precision_score, recall_score, accuracy_score, matthews_corrcoef, jaccard_score as jaccard_similarity_score, zero_one_loss, auc, roc_auc_score
 from sklearn.feature_selection import f_classif, mutual_info_classif
 import matplotlib.pyplot as plt
 import itertools
